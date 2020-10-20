@@ -28,7 +28,7 @@ setup(name='iterreg',
       license=LICENSE,
       maintainer=MAINTAINER,
       maintainer_email=MAINTAINER_EMAIL,
-      requires=["celer", "matplotlib", "numpy", "scipy"],
+      install_requires=["celer", "matplotlib", "numpy", "scipy"],
       download_url=DOWNLOAD_URL,
       packages=['iterreg'],
       )
