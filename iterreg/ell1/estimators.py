@@ -3,7 +3,7 @@ from scipy import sparse
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model._base import LinearModel
-from sklearn.linear_model import Lasso, LassoCV, LinearRegression
+from sklearn.linear_model import LinearRegression
 from numpy.linalg import norm
 
 from iterreg.utils import power_method, shrink
@@ -13,7 +13,7 @@ def _dual_primal_callback(
         X_train, y_train, X_test, y_test, max_iter=100, memory=100, f_test=1,
         verbose=False):
     """
-    Do Pock-Cambolle iterations on train data and stop when MSE on test
+    Do Pock-Chambolle iterations on train data and stop when MSE on test
     data stops decreasing.
     """
     best_mse = np.mean(y_test ** 2)

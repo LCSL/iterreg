@@ -153,7 +153,6 @@ def fista_lasso(X, y, alpha, max_iter, f_store=1):
     z = np.zeros(p)
     t_new = 1
     E = np.zeros(max_iter // f_store)
-    R = y.copy().astype(np.float64)
     all_w = np.zeros((max_iter // f_store, p))
 
     for t in range(max_iter):

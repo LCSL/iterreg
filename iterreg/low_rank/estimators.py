@@ -1,12 +1,9 @@
 import numpy as np
-from scipy import sparse
 
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model._base import LinearModel
 from sklearn.linear_model import LinearRegression
-from numpy.linalg import norm
 
-from iterreg.utils import power_method, shrink
+from iterreg.utils import shrink
 
 
 def _dual_primal_lowrank_callback(
