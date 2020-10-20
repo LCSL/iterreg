@@ -1,0 +1,4 @@
+celer
+numpy
+scikit-learn
+scipy

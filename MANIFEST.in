@@ -1,0 +1,15 @@
+include *.rst
+include *.md
+include *.in
+include LICENSE
+include iterreg/__init__.py
+include requirements.txt
+
+recursive-include iterreg *.py
+
+### Exclude
+
+exclude .coveragerc
+exclude *.yml
+recursive-exclude iterreg *.pyc
+
