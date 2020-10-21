@@ -5,9 +5,15 @@ include LICENSE
 include iterreg/__init__.py
 include Makefile
 include requirements.txt
-
+include doc/Makefile
+include doc/index.rst
+include doc/doc-requirements.txt
+include doc/api.rst
+include doc/conf.py
+include examples/README.txt
 recursive-include iterreg *.py
 
+recursive-include examples *.py
 ### Exclude
 
 exclude .coveragerc

@@ -1,3 +1,8 @@
 *.pyc
 .vscode/*
 iterreg.egg-info/*
+
+doc/auto_examples/*
+doc/_build/*
+doc/gen_modules/*
+/MANIFEST
