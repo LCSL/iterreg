@@ -1,0 +1,18 @@
+
+:orphan:
+
+.. _sphx_glr_auto_examples_sg_execution_times:
+
+Computation times
+=================
+**05:42.379** total execution time for **auto_examples** files:
+
++-------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_plot_cv_vs_cp_path.py` (``plot_cv_vs_cp_path.py``)           | 05:42.379 | 0.0 MB |
++-------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_plot_existence_stopping.py` (``plot_existence_stopping.py``) | 00:00.000 | 0.0 MB |
++-------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_plot_rate_bregman.py` (``plot_rate_bregman.py``)             | 00:00.000 | 0.0 MB |
++-------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_plot_stopping_lowrank.py` (``plot_stopping_lowrank.py``)     | 00:00.000 | 0.0 MB |
++-------------------------------------------------------------------------------------------+-----------+--------+
