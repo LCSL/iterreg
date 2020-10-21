@@ -20,4 +20,4 @@ Estimators
 .. autosummary::
    :toctree: generated/
 
-   BasisPursuitIterReg
+   ell1.estimators.BasisPursuitIterReg

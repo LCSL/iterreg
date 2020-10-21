@@ -1,9 +1,10 @@
 """
 ===============================================
-Plot Chambolle Pock path vs Lasso TIkhonov path
+Plot Chambolle Pock path vs Lasso Tikhonov path
 ===============================================
 
-todo write a title
+Comparison of Tikhonov regularization path (fast LassoCV with the celer
+package) and iterative regularization (ours).
 """
 import time
 import numpy as np
@@ -25,8 +26,8 @@ X, y = fetch_libsvm(dataset)
 n_splits = 4
 kf = KFold(n_splits=n_splits, shuffle=True, random_state=0)
 
-clf = LassoCV(fit_intercept=False, eps=1e-1,
-              tol=1e-6, n_alphas=100, n_jobs=4, cv=kf, verbose=0)
+clf = LassoCV(fit_intercept=False, eps=3e-3,
+              n_alphas=100, n_jobs=4, cv=kf, verbose=0)
 
 clf.fit(X, y)
 
@@ -57,7 +58,7 @@ ax.axvline(clf.alpha_ / clf.alphas_[0], linestyle='--', color='k',
            label=r'best $\lambda$')
 
 ax.set_title("Tikhonov regularization")
-ax.set_xticks([1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0])
+ax.set_xticks([1e-2, 1e-1, 1e0])
 
 ax.set_xlabel(r'$\lambda / \lambda_{\mathrm{\max}}$')
 ax.set_ylabel('Mean squared error')
