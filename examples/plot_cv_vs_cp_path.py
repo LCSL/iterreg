@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from celer import LassoCV
-from celer.datasets import fetch_libsvm
+from libsvmdata import fetch_libsvm
 from sklearn.model_selection import KFold
 from joblib import Parallel, delayed
 
