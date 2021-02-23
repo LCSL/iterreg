@@ -9,11 +9,10 @@ Plot the stopping time for low rank matrix completion.
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.linalg import norm
+from celer.plot_utils import configure_plt
 
 from iterreg.low_rank.solvers import dual_primal_low_rank
-from iterreg.utils import plot_legend_apart
 
-from celer.plot_utils import configure_plt
 configure_plt()
 
 

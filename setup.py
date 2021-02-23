@@ -1,7 +1,7 @@
 import os
 
 from distutils.core import setup
-
+from setuptools import find_packages
 
 descr = 'Implicit regularization for convex problems'
 
@@ -28,7 +28,7 @@ setup(name='iterreg',
       license=LICENSE,
       maintainer=MAINTAINER,
       maintainer_email=MAINTAINER_EMAIL,
-      install_requires=["celer", "matplotlib", "numba", "numpy", "scipy"],
+      install_requires=["celer>=0.6", "matplotlib", "numba", "numpy", "scipy"],
       download_url=DOWNLOAD_URL,
-      packages=['iterreg'],
+      packages=find_packages(),
       )
