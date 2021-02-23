@@ -6,7 +6,7 @@
 Iterreg
 =======
 
-This is a library to run iterative regularization for convex bias. [1].
+This is a library to run iterative regularization for convex bias.
 
 Installation
 ------------
@@ -41,18 +41,18 @@ If you use this code, please cite:
 
 .. code-block:: bibtex
 
-  @article{arxiv,
+  @inproceedings{iterreg,
     title = {Iterative regularization with convex regularizers},
     author = {Molinari, Cesare and Massias, Mathurin and Rosasco, Lorenzo and Villa, Silvia},
-    journal = Arxiv preprint,
-    year = 2020,
+    booktitle = AISTATS,
+    year = 2021,
   }
 
 
 
 ArXiv links:
 
-- TODO
+- https://arxiv.org/abs/2006.09859
 
 
 
