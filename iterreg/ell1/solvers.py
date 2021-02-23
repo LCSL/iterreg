@@ -9,7 +9,7 @@ from iterreg.utils import shrink, power_method
 
 def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
                 verbose=False):
-    """Chambolle-Pock algorithm with theta=1."""
+    """Chambolle-Pock algorithm with relaxation parameter equal to 1."""
     n, d = X.shape
     if alpha_prec is not None:
         assert 0 <= alpha_prec <= 2
@@ -39,6 +39,8 @@ def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
 
 
 def dual_primal(X, y, max_iter=1000, f_store=10, verbose=False):
+    """Chambolle-Pock algorithm applied to the dual: interpolation on the
+    variable w."""
     n, d = X.shape
     if sparse.issparse(X):
         tau = 1 / power_method(X)
@@ -63,7 +65,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, verbose=False):
 
 
 @njit
-def cd(X, y, max_iter=100, f_store=1, verbose=False):
+def cd_primal_dual(X, y, max_iter=100, f_store=1, verbose=False):
     n, d = X.shape
     taus = 1. / (2. * (X ** 2).sum(axis=0))
     res = - y  # residuals: Ax - b

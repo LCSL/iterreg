@@ -1,4 +1,6 @@
-celer
+celer>=0.6
+joblib
 numpy
+numba
 scikit-learn
 scipy
