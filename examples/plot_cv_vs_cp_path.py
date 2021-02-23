@@ -13,11 +13,10 @@ import matplotlib.pyplot as plt
 from celer import LassoCV
 from celer.datasets import fetch_libsvm
 from sklearn.model_selection import KFold
-from joblib import Parallel, delayed, dump, load
+from joblib import Parallel, delayed
 
 from iterreg.ell1 import dual_primal
 from iterreg.ell1.estimators import BasisPursuitIterReg
-from iterreg.utils import make_sparse_data, fetch_leukemia
 
 
 dataset = 'rcv1_train'
