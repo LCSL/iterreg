@@ -1,3 +1,4 @@
+libsvmdata
 numpydoc
 pandas
 pillow
