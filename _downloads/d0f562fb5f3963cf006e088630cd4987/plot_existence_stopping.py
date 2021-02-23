@@ -11,11 +11,10 @@ import matplotlib.pyplot as plt
 
 from numpy.linalg import norm
 from sklearn.linear_model import LassoLars
-from sklearn.model_selection import train_test_split
 from joblib import Parallel, delayed
 
 from iterreg.ell1 import dual_primal
-from iterreg.utils import plot_legend_apart, make_sparse_data
+from iterreg.utils import make_sparse_data
 
 
 from celer.plot_utils import configure_plt
@@ -81,17 +80,3 @@ ax.set_xlabel("Iteration $k$")
 
 plt.legend(ncol=3, fontsize=16, loc='upper right')
 plt.show(block=False)
-
-
-# res_proc = res.copy()
-# res_proc.sort(axis=1)
-# # remove extremal values no need for large enough d
-# # res_proc = res_proc[:, n_reps // 10:-n_reps // 10]
-
-# fig4 = plt.figure(figsize=(7, 3), constrained_layout=True)
-
-# plt.plot(deltas, np.mean(1 / res_proc, axis=1), marker='x')
-
-# plt.xlabel(r"$\delta$")
-# plt.ylabel(r"empirical $1/k^\star(\delta)$")
-# plt.show(block=False)

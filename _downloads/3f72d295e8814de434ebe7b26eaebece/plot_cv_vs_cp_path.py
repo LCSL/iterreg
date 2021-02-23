@@ -11,23 +11,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from celer import LassoCV
-from celer.datasets import fetch_libsvm
+from libsvmdata import fetch_libsvm
 from sklearn.model_selection import KFold
-from joblib import Parallel, delayed, dump, load
+from joblib import Parallel, delayed
 
 from iterreg.ell1 import dual_primal
 from iterreg.ell1.estimators import BasisPursuitIterReg
-from iterreg.utils import make_sparse_data, fetch_leukemia
 
 
 dataset = 'rcv1_train'
 X, y = fetch_libsvm(dataset)
+# make dataset smaller for faster example:
+X = X[:5000]
+y = y[:5000]
 
 n_splits = 4
 kf = KFold(n_splits=n_splits, shuffle=True, random_state=0)
 
-clf = LassoCV(fit_intercept=False, eps=3e-3,
-              n_alphas=100, n_jobs=4, cv=kf, verbose=0)
+clf = LassoCV(fit_intercept=False, n_jobs=4, cv=kf, verbose=0)
 
 clf.fit(X, y)
 
@@ -76,9 +77,8 @@ ax.legend()
 
 plt.show(block=False)
 
-
-# now do the timings a posteriori:
-# time if we stopped at best_iter
+##############################################################################
+# Now do the timings a posteriori, as if we kenw the optimal iteration/lambda
 bp = BasisPursuitIterReg(max_iter=best_iter, memory=best_iter + 1)
 t0 = time.perf_counter()
 bp.fit(X, y)
@@ -89,8 +89,8 @@ print("Duration for CP: %.3fs" % time_cp)
 alpha_max = np.max(np.abs(X.T @ y)) / len(y)
 alphas = np.geomspace(1, 1e-3, 100) * alpha_max
 alphas_stop = alphas[alphas >= best_alpha]
-# time if we stopped at best_alpha:
 
+# time if we stopped at best_alpha:
 t0 = time.perf_counter()
 clf = LassoCV(fit_intercept=False, alphas=alphas_stop,
               verbose=0, cv=4, n_jobs=4).fit(X, y)
