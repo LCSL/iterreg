@@ -38,15 +38,14 @@ def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, max_iter=1000, f_store=10, verbose=False):
+def dual_primal(X, y, step=0.99, max_iter=1000, f_store=10, verbose=False):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     variable w."""
     n, d = X.shape
-    if sparse.issparse(X):
-        tau = 1 / power_method(X)
-    else:
-        tau = 1 / norm(X, ord=2)
-    sigma = tau
+    L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+
+    tau = step / L
+    sigma = 0.99 / (step * L)
     all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
     theta = np.zeros(n)
