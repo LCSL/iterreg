@@ -32,13 +32,15 @@ clf = LassoCV(fit_intercept=False, n_jobs=4, cv=kf, verbose=0)
 
 clf.fit(X, y)
 
-max_iter = 500
+max_iter = 1_000
 f_store = 5
+step = 1
 n_points = max_iter // f_store
 mse_dp = np.zeros((n_points, n_splits))
 
 res = Parallel(n_jobs=-1)(delayed(dual_primal)(
-    X[train_idx], y[train_idx], max_iter, f_store, verbose=False)
+    X[train_idx], y[train_idx], step=step, max_iter=max_iter, f_store=f_store,
+    verbose=False)
     for train_idx, _ in kf.split(X))
 all_w = np.array([result[-1] for result in res])
 

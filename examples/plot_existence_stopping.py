@@ -42,7 +42,8 @@ def wrapper(X, y, delta, max_iter, f_store, rep):
     noise = np.random.randn(y.shape[0])
     y_noise = y + delta * noise / norm(noise)
     all_w = dual_primal(
-        X, y_noise, max_iter=max_iter, f_store=f_store, verbose=False)[-1]
+        X, y_noise, step=1, max_iter=max_iter, f_store=f_store,
+        verbose=False)[-1]
     return all_w
 
 
