@@ -24,7 +24,7 @@ Show existence of stopping time
 
 This is for L1 regression.
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-83
+.. GENERATED FROM PYTHON SOURCE LINES 8-84
 
 
 
@@ -92,7 +92,8 @@ This is for L1 regression.
         noise = np.random.randn(y.shape[0])
         y_noise = y + delta * noise / norm(noise)
         all_w = dual_primal(
-            X, y_noise, max_iter=max_iter, f_store=f_store, verbose=False)[-1]
+            X, y_noise, step=1, max_iter=max_iter, f_store=f_store,
+            verbose=False)[-1]
         return all_w
 
 
@@ -134,7 +135,7 @@ This is for L1 regression.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.083 seconds)
+   **Total running time of the script:** ( 0 minutes  10.567 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_existence_stopping.py:

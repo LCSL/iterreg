@@ -41,7 +41,7 @@ convergence of the iterates.
  .. code-block:: none
 
     usetex mode requires TeX.
-    Res norm PD 1.89e-10
+    Res norm PD 1.86e-10
     Res norm BP 1.63e-12
 
 
@@ -119,7 +119,7 @@ convergence of the iterates.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.079 seconds)
+   **Total running time of the script:** ( 0 minutes  3.006 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_rate_bregman.py:

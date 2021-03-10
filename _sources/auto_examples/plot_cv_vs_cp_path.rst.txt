@@ -25,7 +25,7 @@ Plot Chambolle Pock path vs Lasso Tikhonov path
 Comparison of Tikhonov regularization path (fast LassoCV with the celer
 package) and iterative regularization (ours).
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-80
+.. GENERATED FROM PYTHON SOURCE LINES 9-82
 
 .. code-block:: default
 
@@ -55,13 +55,15 @@ package) and iterative regularization (ours).
 
     clf.fit(X, y)
 
-    max_iter = 500
+    max_iter = 1_000
     f_store = 5
+    step = 1
     n_points = max_iter // f_store
     mse_dp = np.zeros((n_points, n_splits))
 
     res = Parallel(n_jobs=-1)(delayed(dual_primal)(
-        X[train_idx], y[train_idx], max_iter, f_store, verbose=False)
+        X[train_idx], y[train_idx], step=step, max_iter=max_iter, f_store=f_store,
+        verbose=False)
         for train_idx, _ in kf.split(X))
     all_w = np.array([result[-1] for result in res])
 
@@ -117,7 +119,7 @@ package) and iterative regularization (ours).
     Dataset: rcv1_train
     Downloading data from https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/rcv1_train.binary.bz2 (13.1 MB)
 
-    file_sizes:   0%|                                   | 0.00/13.7M [00:00<?, ?B/s]    file_sizes:   0%|                           | 24.6k/13.7M [00:00<02:09, 106kB/s]    file_sizes:   0%|                           | 49.2k/13.7M [00:00<02:08, 106kB/s]    file_sizes:   1%|2                           | 106k/13.7M [00:00<01:20, 170kB/s]    file_sizes:   2%|4                           | 221k/13.7M [00:00<00:45, 298kB/s]    file_sizes:   3%|9                           | 451k/13.7M [00:01<00:24, 547kB/s]    file_sizes:   7%|#7                         | 909k/13.7M [00:01<00:12, 1.03MB/s]    file_sizes:  13%|###4                      | 1.83M/13.7M [00:01<00:06, 1.98MB/s]    file_sizes:  27%|######9                   | 3.66M/13.7M [00:01<00:02, 3.82MB/s]    file_sizes:  38%|#########9                | 5.23M/13.7M [00:02<00:01, 4.73MB/s]    file_sizes:  50%|############8             | 6.81M/13.7M [00:02<00:01, 5.36MB/s]    file_sizes:  61%|###############8          | 8.38M/13.7M [00:02<00:00, 5.79MB/s]    file_sizes:  72%|##################8       | 9.95M/13.7M [00:02<00:00, 6.09MB/s]    file_sizes:  84%|#####################8    | 11.5M/13.7M [00:03<00:00, 6.30MB/s]    file_sizes:  95%|########################8 | 13.1M/13.7M [00:03<00:00, 6.44MB/s]    file_sizes: 100%|##########################| 13.7M/13.7M [00:03<00:00, 4.20MB/s]
+    file_sizes:   0%|                                   | 0.00/13.7M [00:00<?, ?B/s]    file_sizes:   0%|                           | 24.6k/13.7M [00:00<02:08, 107kB/s]    file_sizes:   0%|                           | 49.2k/13.7M [00:00<02:08, 106kB/s]    file_sizes:   1%|2                           | 106k/13.7M [00:00<01:19, 171kB/s]    file_sizes:   2%|4                           | 221k/13.7M [00:00<00:45, 299kB/s]    file_sizes:   3%|9                           | 451k/13.7M [00:01<00:24, 549kB/s]    file_sizes:   7%|#7                         | 909k/13.7M [00:01<00:12, 1.04MB/s]    file_sizes:  13%|###4                      | 1.83M/13.7M [00:01<00:05, 1.99MB/s]    file_sizes:  27%|######9                   | 3.66M/13.7M [00:01<00:02, 3.87MB/s]    file_sizes:  38%|#########9                | 5.23M/13.7M [00:02<00:01, 4.78MB/s]    file_sizes:  50%|############8             | 6.81M/13.7M [00:02<00:01, 5.41MB/s]    file_sizes:  61%|###############8          | 8.38M/13.7M [00:02<00:00, 5.81MB/s]    file_sizes:  72%|##################8       | 9.95M/13.7M [00:02<00:00, 6.11MB/s]    file_sizes:  84%|#####################8    | 11.5M/13.7M [00:03<00:00, 6.32MB/s]    file_sizes:  95%|########################8 | 13.1M/13.7M [00:03<00:00, 6.46MB/s]    file_sizes: 100%|##########################| 13.7M/13.7M [00:03<00:00, 4.23MB/s]
     Successfully downloaded file to /home/circleci/celer_data/libsvm/binary/rcv1_train.binary.bz2
     Decompressing...
     Loading svmlight file...
@@ -125,11 +127,11 @@ package) and iterative regularization (ours).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Now do the timings a posteriori, as if we kenw the optimal iteration/lambda
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-105
+.. GENERATED FROM PYTHON SOURCE LINES 84-107
 
 .. code-block:: default
 
@@ -166,12 +168,11 @@ Now do the timings a posteriori, as if we kenw the optimal iteration/lambda
 
  .. code-block:: none
 
-    Convergence warning: mse was still decreasing when max_iter was reached
-    Duration for CP: 0.045s
+    Duration for CP: 0.118s
     CP early stop needs 25 iter
     LassoCV optimal lambda: 4.33e-03 lambda_max
-    CP time: 0.045 s
-    CV time: 7.892 s
+    CP time: 0.118 s
+    CV time: 7.859 s
 
 
 
@@ -179,7 +180,7 @@ Now do the timings a posteriori, as if we kenw the optimal iteration/lambda
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  41.014 seconds)
+   **Total running time of the script:** ( 0 minutes  42.463 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_cv_vs_cp_path.py:
