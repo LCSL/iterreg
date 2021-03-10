@@ -7,7 +7,7 @@ from scipy import sparse
 from iterreg.utils import shrink, power_method
 
 
-def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
+def primal_dual(X, y, step=1, max_iter=1000, f_store=1, alpha_prec=None,
                 verbose=False):
     """Chambolle-Pock algorithm with relaxation parameter equal to 1."""
     n, d = X.shape
@@ -16,11 +16,11 @@ def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
         sigma = 1. / np.sum(np.abs(X) ** alpha_prec, axis=1)
         tau = 1. / np.sum(np.abs(X) ** (2 - alpha_prec), axis=0)
     else:
-        if sparse.issparse(X):
-            tau = 1 / power_method(X, max_iter=1000)
-        else:
-            tau = 1 / norm(X, ord=2)
-        sigma = tau
+        L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+        # stepsizes such that tau * sigma * L ** 2 < 1
+        tau = step / L
+        sigma = 0.99 / (step * L)
+
     all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
     w_bar = np.zeros(d)
@@ -38,15 +38,27 @@ def primal_dual(X, y, max_iter=100, f_store=1, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, step=0.99, max_iter=1000, f_store=10, verbose=False):
+def dual_primal(X, y, step=1, max_iter=1000, f_store=10, verbose=False,
+                ret_all=True, memory=10, callback=None):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
-    variable w."""
+    variable w.
+
+    callback is used to monitor a criterion on left out data"""
     n, d = X.shape
     L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
 
+    crits = np.zeros(max_iter // f_store)
+
+    if callback is not None:
+        best_crit = np.inf
+        best_w = np.zeros(d)
+        n_non_decrease = 0
+
+    # stepsizes such that tau * sigma * L ** 2 = 0.99
     tau = step / L
     sigma = 0.99 / (step * L)
-    all_w = np.zeros([max_iter // f_store, d])
+    if ret_all:
+        all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
     theta = np.zeros(n)
     theta_old = np.zeros(n)
@@ -56,11 +68,31 @@ def dual_primal(X, y, step=0.99, max_iter=1000, f_store=10, verbose=False):
         theta_old[:] = theta
         theta += sigma * (X @ w - y)
         if k % f_store == 0:
-            all_w[k // f_store] = w
+            if ret_all:
+                all_w[k // f_store] = w
             if verbose:
                 print("Iter %d" % k)
-
-    return w, theta, all_w
+            if callback is not None:
+                crits[k // f_store] = callback(w)
+                if crits[k // f_store] < best_crit:
+                    n_non_decrease = 0
+                    best_crit = crits[k // f_store]
+                    best_w = w.copy()
+                    best_theta = theta.copy()
+                else:
+                    n_non_decrease += 1
+                if n_non_decrease >= memory:
+                    if verbose:
+                        print("No improvement for %d iterations"
+                              "(best: %d), exit" %
+                              (memory * f_store, k - memory * f_store))
+                        w, theta = best_w, best_theta
+                        crits = crits[:k // f_store + 1]
+                        break
+    if ret_all:
+        return w, theta, crits, all_w
+    else:
+        return w, theta, crits
 
 
 @njit
