@@ -19,7 +19,7 @@ from celer.plot_utils import configure_plt
 from iterreg.ell1 import dual_primal
 
 
-configure_plt(fontsize=16)
+configure_plt()
 
 ###############################################################################
 # An util plot function:
