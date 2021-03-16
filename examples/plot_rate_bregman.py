@@ -1,10 +1,10 @@
 """
-==================================
-Plot nullity of Bregman guarantees
-==================================
+=============================
+Nullity of Bregman guarantees
+=============================
 
 This example shows that the Bregman divergence is not enough to control
-convergence of the iterates.
+convergence of the iterates: it vanishes as soon as the signs are the same.
 """
 import numpy as np
 import matplotlib.pyplot as plt
