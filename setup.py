@@ -28,7 +28,9 @@ setup(name='iterreg',
       license=LICENSE,
       maintainer=MAINTAINER,
       maintainer_email=MAINTAINER_EMAIL,
-      install_requires=["celer>=0.6", "matplotlib", "numba", "numpy", "scipy"],
+      install_requires=[
+          "matplotlib", "numba", "numpy", "scipy",
+          "celer @ https://github.com/mathurinm/celer/archive/master.zip"],
       download_url=DOWNLOAD_URL,
       packages=find_packages(),
       )
