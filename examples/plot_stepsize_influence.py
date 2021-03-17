@@ -35,8 +35,8 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     fig, axarr = plt.subplots(3, 2, sharey='row', sharex='col',
                               figsize=(7, 5), constrained_layout=True)
 
-    fig.suptitle("Correlation %.1f, density %.2f, snr %s" %
-                 (corr, density, snr))
+    fig.suptitle(r"Correlation=%.1f, $||x^*||_0$= %s, snr=%s" %
+                 (corr, (x_true != 0).sum(), snr))
 
     # def distance_x_true(clf, X_, y):
     #     return norm(clf.coef_ - x_true)
@@ -63,16 +63,11 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     axarr[2, 0].set_ylabel(r'$\Vert x_k - x^*\Vert$')
     axarr[2, 0].set_xlabel("CP iteration")
     axarr[0, 0].legend()
+    axarr[0, 0].set_title('Iterative regularization')
 
     # last column: Lasso results
-    # clf = Lasso(fit_intercept=False)
     alphas = norm(A.T @ b, ord=np.inf) / len(b) * np.geomspace(1, 1e-3)
-    # grid_search = GridSearchCV(
-    #     clf, {'alpha': alphas},
-    #     scoring={'f1': f1,
-    #              'supp': support_size,
-    #              'dist_x_true': distance_x_true},
-    #     refit=False, cv=3).fit(A, b)
+
     coefs = celer_path(A, b, 'lasso', alphas=alphas)[1].T
     axarr[0, 1].semilogx(
         alphas, [f1_score(coef != 0, x_true != 0) for coef in coefs])
@@ -81,12 +76,6 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     axarr[2, 1].semilogx(
         alphas, [norm(coef - x_true) for coef in coefs])
 
-    # axarr[0, 1].semilogx(
-    #     alphas, grid_search.cv_results_["mean_test_f1"])
-    # axarr[1, 1].semilogx(
-    #     alphas, grid_search.cv_results_["mean_test_supp"])
-    # axarr[2, 1].semilogx(
-    #     alphas, grid_search.cv_results_["mean_test_dist_x_true"])
     for i in range(3):
         axarr[i, 1].set_xlim(*axarr[i, 1].get_xlim()[::-1])
     axarr[2, 1].set_xlabel(r'$\lambda$')
