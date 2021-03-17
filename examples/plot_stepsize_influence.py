@@ -11,8 +11,6 @@ import numpy as np
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score
-# from sklearn.model_selection import GridSearchCV
-# from celer import Lasso
 from celer.datasets import make_correlated_data
 from celer.homotopy import celer_path
 
@@ -23,7 +21,7 @@ n_samples = 500
 n_features = 1_000
 
 ###############################################################################
-# An util plot function:
+# The function to compute CP, Lasso path and plot metrics:
 
 
 def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
@@ -37,15 +35,6 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
 
     fig.suptitle(r"Correlation=%.1f, $||x^*||_0$= %s, snr=%s" %
                  (corr, (x_true != 0).sum(), snr))
-
-    # def distance_x_true(clf, X_, y):
-    #     return norm(clf.coef_ - x_true)
-
-    def f1(clf, X, y):
-        return f1_score(clf.coef_ != 0, x_true != 0)
-
-    # def support_size(clf, X, y):
-        # return np.sum(clf.coef_ != 0)
 
     for i, step in enumerate(steps):
         _, _, _, all_x = dual_primal(
@@ -90,7 +79,6 @@ corr = 0.
 snr = np.inf
 
 plot_varying_sigma(corr, density, snr, [2, 10, 100], max_iter=100)
-# 1 / 0
 ###############################################################################
 # A different setting, with more correlation in A but still noiseless
 
