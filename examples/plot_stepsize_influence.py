@@ -11,15 +11,14 @@ import numpy as np
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score
-from sklearn.model_selection import GridSearchCV
-from celer import Lasso
+# from sklearn.model_selection import GridSearchCV
+# from celer import Lasso
 from celer.datasets import make_correlated_data
-from celer.plot_utils import configure_plt
+from celer.homotopy import celer_path
 
 from iterreg.ell1 import dual_primal
 
 
-# configure_plt()
 n_samples = 500
 n_features = 1_000
 
@@ -39,14 +38,14 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     fig.suptitle("Correlation %.1f, density %.2f, snr %s" %
                  (corr, density, snr))
 
-    def distance_x_true(clf, X_, y):
-        return norm(clf.coef_ - x_true)
+    # def distance_x_true(clf, X_, y):
+    #     return norm(clf.coef_ - x_true)
 
     def f1(clf, X, y):
         return f1_score(clf.coef_ != 0, x_true != 0)
 
-    def support_size(clf, X, y):
-        return np.sum(clf.coef_ != 0)
+    # def support_size(clf, X, y):
+        # return np.sum(clf.coef_ != 0)
 
     for i, step in enumerate(steps):
         _, _, _, all_x = dual_primal(
@@ -66,21 +65,28 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     axarr[0, 0].legend()
 
     # last column: Lasso results
-    clf = Lasso(fit_intercept=False)
+    # clf = Lasso(fit_intercept=False)
     alphas = norm(A.T @ b, ord=np.inf) / len(b) * np.geomspace(1, 1e-3)
-    grid_search = GridSearchCV(
-        clf, {'alpha': alphas},
-        scoring={'f1': f1,
-                 'supp': support_size,
-                 'dist_x_true': distance_x_true},
-        refit=False, cv=3).fit(A, b)
-
+    # grid_search = GridSearchCV(
+    #     clf, {'alpha': alphas},
+    #     scoring={'f1': f1,
+    #              'supp': support_size,
+    #              'dist_x_true': distance_x_true},
+    #     refit=False, cv=3).fit(A, b)
+    coefs = celer_path(A, b, 'lasso', alphas=alphas)[1].T
     axarr[0, 1].semilogx(
-        alphas, grid_search.cv_results_["mean_test_f1"])
+        alphas, [f1_score(coef != 0, x_true != 0) for coef in coefs])
     axarr[1, 1].semilogx(
-        alphas, grid_search.cv_results_["mean_test_supp"])
+        alphas, [np.sum(coef != 0) for coef in coefs])
     axarr[2, 1].semilogx(
-        alphas, grid_search.cv_results_["mean_test_dist_x_true"])
+        alphas, [norm(coef - x_true) for coef in coefs])
+
+    # axarr[0, 1].semilogx(
+    #     alphas, grid_search.cv_results_["mean_test_f1"])
+    # axarr[1, 1].semilogx(
+    #     alphas, grid_search.cv_results_["mean_test_supp"])
+    # axarr[2, 1].semilogx(
+    #     alphas, grid_search.cv_results_["mean_test_dist_x_true"])
     for i in range(3):
         axarr[i, 1].set_xlim(*axarr[i, 1].get_xlim()[::-1])
     axarr[2, 1].set_xlabel(r'$\lambda$')
@@ -95,6 +101,7 @@ corr = 0.
 snr = np.inf
 
 plot_varying_sigma(corr, density, snr, [2, 10, 100], max_iter=100)
+# 1 / 0
 ###############################################################################
 # A different setting, with more correlation in A but still noiseless
 
