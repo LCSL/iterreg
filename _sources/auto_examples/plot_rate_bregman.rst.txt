@@ -18,12 +18,12 @@
 .. _sphx_glr_auto_examples_plot_rate_bregman.py:
 
 
-==================================
-Plot nullity of Bregman guarantees
-==================================
+=============================
+Nullity of Bregman guarantees
+=============================
 
 This example shows that the Bregman divergence is not enough to control
-convergence of the iterates.
+convergence of the iterates: it vanishes as soon as the signs are the same.
 
 .. GENERATED FROM PYTHON SOURCE LINES 9-71
 
@@ -119,7 +119,7 @@ convergence of the iterates.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.006 seconds)
+   **Total running time of the script:** ( 0 minutes  3.201 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_rate_bregman.py:
