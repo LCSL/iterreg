@@ -27,7 +27,8 @@ n_features = 1_000
 
 def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     A_, b_, x_true = make_correlated_data(
-        n_samples=int(n_samples * 4 / 3.), n_features=n_features, density=density,
+        n_samples=int(n_samples * 4 / 3.), n_features=n_features,
+        density=density,
         corr=corr, snr=snr, random_state=0)
 
     A, A_test, b, b_test = train_test_split(A_, b_, test_size=0.25)
