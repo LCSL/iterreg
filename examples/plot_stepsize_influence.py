@@ -27,10 +27,10 @@ n_features = 1_000
 
 def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     A_, b_, x_true = make_correlated_data(
-        n_samples=n_samples * 4 / 3., n_features=n_features, density=density,
+        n_samples=int(n_samples * 4 / 3.), n_features=n_features, density=density,
         corr=corr, snr=snr, random_state=0)
 
-    A, A_test, b, b_test = train_test_split(A, b, test_size=0.25)
+    A, A_test, b, b_test = train_test_split(A_, b_, test_size=0.25)
 
     print('Starting computation for this setting')
     fig, axarr = plt.subplots(4, 2, sharey='row', sharex='col',
@@ -44,7 +44,7 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
             A, b, step=step, ret_all=True, max_iter=max_iter, f_store=1)
         scores = [f1_score(x != 0, x_true != 0) for x in all_x]
         supp_size = np.sum(all_x != 0, axis=1)
-        mses = [mean_square_error(b_test, A_test @ x) for x in all_x]
+        mses = [mean_squared_error(b_test, A_test @ x) for x in all_x]
 
         axarr[0, 0].plot(scores, label=r"$\sigma=1 /%d ||A||$" % step)
         axarr[1, 0].semilogy(supp_size)
