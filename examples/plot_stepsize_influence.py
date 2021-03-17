@@ -73,10 +73,12 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     axarr[3, 1].semilogx(
         alphas, [mean_squared_error(b_test, A_test @ coef) for coef in coefs])
 
-    for i in range(4):
-        axarr[i, 1].set_xlim(*axarr[i, 1].get_xlim()[::-1])
-    axarr[2, 1].set_xlabel(r'$\lambda$')
+    axarr[3, 1].set_xlabel(r'$\lambda$')
     axarr[0, 1].set_title("Lasso path")
+
+    for i in range(3):
+        axarr[i, 1].set_xlim(*axarr[i, 1].get_xlim()[::-1])
+
     plt.show(block=False)
 
 
