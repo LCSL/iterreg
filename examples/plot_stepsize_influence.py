@@ -10,7 +10,8 @@ but is beneficial for support recovery.
 import numpy as np
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, mean_squared_error
+from sklearn.model_selection import train_test_split
 from celer.datasets import make_correlated_data
 from celer.homotopy import celer_path
 
@@ -25,12 +26,14 @@ n_features = 1_000
 
 
 def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
-    A, b, x_true = make_correlated_data(
-        n_samples=n_samples, n_features=n_features, density=density,
+    A_, b_, x_true = make_correlated_data(
+        n_samples=n_samples * 4 / 3., n_features=n_features, density=density,
         corr=corr, snr=snr, random_state=0)
 
+    A, A_test, b, b_test = train_test_split(A, b, test_size=0.25)
+
     print('Starting computation for this setting')
-    fig, axarr = plt.subplots(3, 2, sharey='row', sharex='col',
+    fig, axarr = plt.subplots(4, 2, sharey='row', sharex='col',
                               figsize=(7, 5), constrained_layout=True)
 
     fig.suptitle(r"Correlation=%.1f, $||x^*||_0$= %s, snr=%s" %
@@ -41,16 +44,19 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
             A, b, step=step, ret_all=True, max_iter=max_iter, f_store=1)
         scores = [f1_score(x != 0, x_true != 0) for x in all_x]
         supp_size = np.sum(all_x != 0, axis=1)
+        mses = [mean_square_error(b_test, A_test @ x) for x in all_x]
 
         axarr[0, 0].plot(scores, label=r"$\sigma=1 /%d ||A||$" % step)
         axarr[1, 0].semilogy(supp_size)
         axarr[2, 0].plot(norm(all_x - x_true, axis=1))
+        axarr[3, 0].plot(mses)
 
     axarr[0, 0].set_ylim(0, 1)
     axarr[0, 0].set_ylabel('F1 score for support')
     axarr[1, 0].set_ylabel(r"$||x_k||_0$")
     axarr[2, 0].set_ylabel(r'$\Vert x_k - x^*\Vert$')
     axarr[2, 0].set_xlabel("CP iteration")
+    axarr[3, 0].set_ylabel("pred MSE left out")
     axarr[0, 0].legend()
     axarr[0, 0].set_title('Iterative regularization')
 
@@ -64,8 +70,10 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
         alphas, [np.sum(coef != 0) for coef in coefs])
     axarr[2, 1].semilogx(
         alphas, [norm(coef - x_true) for coef in coefs])
+    axarr[3, 1].semilogx(
+        alphas, [mean_squared_error(b_test, A_test @ coef) for coef in coefs])
 
-    for i in range(3):
+    for i in range(4):
         axarr[i, 1].set_xlim(*axarr[i, 1].get_xlim()[::-1])
     axarr[2, 1].set_xlabel(r'$\lambda$')
     axarr[0, 1].set_title("Lasso path")
