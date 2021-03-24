@@ -38,12 +38,47 @@ def primal_dual(X, y, step=1, max_iter=1000, f_store=1, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, step=1, max_iter=1000, f_store=10, verbose=False,
-                ret_all=True, memory=10, callback=None):
+def dual_primal(X, y, max_iter=1000, f_store=10, ret_all=True,
+                callback=None, memory=10, step=1, rho=0.99, verbose=False,):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
-    variable w.
+    primal variable w.
 
-    callback is used to monitor a criterion on left out data"""
+    Parameters:
+    -----------
+    X : np.array, shape (n_samples, n_features)
+        Design matrix.
+    y : np.array, shape (n_samples,)
+        Observation vector.
+    max_iter : int, optional (default=1000)
+        Maximum number of Chambolle-Pock iterations.
+    f_store : int, optional (default=10)
+        Primal iterates are stored every `f_store` iterations.
+    ret_all : bool, optional (default=True)
+        If True, return all stored primal iterates.
+    callback : callable or None, optional (default=None)
+        Callable called on primal iterate `w` every `f_store` iterations.
+    memory : int, optional (default=10)
+        If `callback` is not None and its value did not decrease for the last
+        `memory` stored iterates, the algorithm is early stopped.
+    step : float, optional (default=1)
+        Balances primal and dual stepsizes. If `step=1`, both are equal.
+    rho : float, optional (default=0.99)
+        The product of the step sizes is smaller than `rho / norm(X, ord=2)**2`
+    verbose : bool, optional (default=False)
+        Verbosity of the algorithm.
+
+    Returns:
+    --------
+    w : np.array, shape (n_features,)
+        Last or best primal iterate.
+    theta : np.array, shape (n_samples,)
+        Last or best dual iterate.
+    crits : np.array, shape (max_iter // f_store,)
+        Value of callback along iterations.
+    all_w : np.array, shape (max_iter // f_store, n_features)
+        Primal iterates every `f_store` iterations. Returned only if
+        `ret_all` is True.
+    """
     n, d = X.shape
     L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
 
@@ -54,9 +89,9 @@ def dual_primal(X, y, step=1, max_iter=1000, f_store=10, verbose=False,
         best_w = np.zeros(d)
         n_non_decrease = 0
 
-    # stepsizes such that tau * sigma * L ** 2 = 0.99
-    tau = step / L
-    sigma = 0.99 / (step * L)
+    # stepsizes such that tau * sigma * L ** 2 = rho < 1
+    tau = np.sqrt(rho) * step / L
+    sigma = np.sqrt(rho) / (step * L)
     if ret_all:
         all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)

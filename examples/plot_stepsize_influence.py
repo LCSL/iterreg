@@ -25,10 +25,16 @@ n_features = 1_000
 # The function to compute CP, Lasso path and plot metrics:
 
 
-def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
+def plot_varying_sigma(corr, density, snr, steps, max_iter=100, rho=0.99):
+    np.random.seed(0)
+    # true coefficient vector has entries equal to 0 or 1
+    supp = np.random.choice(n_features, size=int(density * n_features),
+                            replace=False)
+    x_true = np.zeros(n_features)
+    x_true[supp] = 1
     A_, b_, x_true = make_correlated_data(
         n_samples=int(n_samples * 4 / 3.), n_features=n_features,
-        density=density,
+        w_true=x_true,
         corr=corr, snr=snr, random_state=0)
 
     A, A_test, b, b_test = train_test_split(A_, b_, test_size=0.25)
@@ -42,7 +48,8 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
 
     for i, step in enumerate(steps):
         _, _, _, all_x = dual_primal(
-            A, b, step=step, ret_all=True, max_iter=max_iter, f_store=1)
+            A, b, step=step, rho=rho, ret_all=True, max_iter=max_iter,
+            f_store=1)
         scores = [f1_score(x != 0, x_true != 0) for x in all_x]
         supp_size = np.sum(all_x != 0, axis=1)
         mses = [mean_squared_error(b_test, A_test @ x) for x in all_x]
@@ -58,7 +65,7 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100):
     axarr[2, 0].set_ylabel(r'$\Vert x_k - x^*\Vert$')
     axarr[2, 0].set_xlabel("CP iteration")
     axarr[3, 0].set_ylabel("pred MSE left out")
-    axarr[0, 0].legend()
+    axarr[0, 0].legend(loc='lower right', fontsize=10)
     axarr[0, 0].set_title('Iterative regularization')
 
     # last column: Lasso results
@@ -116,3 +123,12 @@ density = 0.1
 snr = 10
 
 plot_varying_sigma(corr, density, snr, [2, 10, 100], max_iter=100)
+
+
+###############################################################################
+# And when the product of the stepsizes is not taken maximal:
+# tau * sigma = rho
+
+rho = 0.1
+
+plot_varying_sigma(corr, density, snr, [2, 10, 100], rho=rho, max_iter=100)
