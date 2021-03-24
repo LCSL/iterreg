@@ -6,3 +6,4 @@ doc/auto_examples/*
 doc/_build/*
 doc/gen_modules/*
 /MANIFEST
+/doc/generated/*.rst
