@@ -17,6 +17,27 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="From the data, a good dual stepsize can be estimated in the case of sparse recovery.">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_heuristic_sigma_thumb.png
+     :alt: Heuristic for dual stepsize choice in sparse recovery
+
+     :ref:`sphx_glr_auto_examples_plot_heuristic_sigma.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_heuristic_sigma
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Plot the stopping time for low rank matrix completion.">
 
 .. only:: html
