@@ -30,56 +30,56 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100, rho=0.99):
     # true coefficient vector has entries equal to 0 or 1
     supp = np.random.choice(n_features, size=int(density * n_features),
                             replace=False)
-    x_true = np.zeros(n_features)
-    x_true[supp] = 1
-    A_, b_, x_true = make_correlated_data(
+    w_true = np.zeros(n_features)
+    w_true[supp] = 1
+    X_, y_, w_true = make_correlated_data(
         n_samples=int(n_samples * 4 / 3.), n_features=n_features,
-        w_true=x_true,
+        w_true=w_true,
         corr=corr, snr=snr, random_state=0)
 
-    A, A_test, b, b_test = train_test_split(A_, b_, test_size=0.25)
+    X, X_test, y, y_test = train_test_split(X_, y_, test_size=0.25)
 
     print('Starting computation for this setting')
     fig, axarr = plt.subplots(4, 2, sharey='row', sharex='col',
                               figsize=(7, 5), constrained_layout=True)
 
-    fig.suptitle(r"Correlation=%.1f, $||x^*||_0$= %s, snr=%s" %
-                 (corr, (x_true != 0).sum(), snr))
+    fig.suptitle(r"Correlation=%.1f, $||w^*||_0$= %s, snr=%s" %
+                 (corr, (w_true != 0).sum(), snr))
 
     for i, step in enumerate(steps):
-        _, _, _, all_x = dual_primal(
-            A, b, step=step, rho=rho, ret_all=True, max_iter=max_iter,
+        _, _, _, all_w = dual_primal(
+            X, y, step=step, rho=rho, ret_all=True, max_iter=max_iter,
             f_store=1)
-        scores = [f1_score(x != 0, x_true != 0) for x in all_x]
-        supp_size = np.sum(all_x != 0, axis=1)
-        mses = [mean_squared_error(b_test, A_test @ x) for x in all_x]
+        scores = [f1_score(w != 0, w_true != 0) for w in all_w]
+        supp_size = np.sum(all_w != 0, axis=1)
+        mses = [mean_squared_error(y_test, X_test @ w) for w in all_w]
 
-        axarr[0, 0].plot(scores, label=r"$\sigma=1 /%d ||A||$" % step)
+        axarr[0, 0].plot(scores, label=r"$\sigma=1 /%d ||X||$" % step)
         axarr[1, 0].semilogy(supp_size)
-        axarr[2, 0].plot(norm(all_x - x_true, axis=1))
+        axarr[2, 0].plot(norm(all_w - w_true, axis=1))
         axarr[3, 0].plot(mses)
 
     axarr[0, 0].set_ylim(0, 1)
     axarr[0, 0].set_ylabel('F1 score for support')
-    axarr[1, 0].set_ylabel(r"$||x_k||_0$")
-    axarr[2, 0].set_ylabel(r'$\Vert x_k - x^*\Vert$')
+    axarr[1, 0].set_ylabel(r"$||w_k||_0$")
+    axarr[2, 0].set_ylabel(r'$\Vert w_k - w^*\Vert$')
     axarr[2, 0].set_xlabel("CP iteration")
     axarr[3, 0].set_ylabel("pred MSE left out")
     axarr[0, 0].legend(loc='lower right', fontsize=10)
     axarr[0, 0].set_title('Iterative regularization')
 
     # last column: Lasso results
-    alphas = norm(A.T @ b, ord=np.inf) / len(b) * np.geomspace(1, 1e-3)
+    alphas = norm(X.T @ y, ord=np.inf) / len(y) * np.geomspace(1, 1e-3)
 
-    coefs = celer_path(A, b, 'lasso', alphas=alphas)[1].T
+    coefs = celer_path(X, y, 'lasso', alphas=alphas)[1].T
     axarr[0, 1].semilogx(
-        alphas, [f1_score(coef != 0, x_true != 0) for coef in coefs])
+        alphas, [f1_score(coef != 0, w_true != 0) for coef in coefs])
     axarr[1, 1].semilogx(
         alphas, [np.sum(coef != 0) for coef in coefs])
     axarr[2, 1].semilogx(
-        alphas, [norm(coef - x_true) for coef in coefs])
+        alphas, [norm(coef - w_true) for coef in coefs])
     axarr[3, 1].semilogx(
-        alphas, [mean_squared_error(b_test, A_test @ coef) for coef in coefs])
+        alphas, [mean_squared_error(y_test, X_test @ coef) for coef in coefs])
 
     axarr[3, 1].set_xlabel(r'$\lambda$')
     axarr[0, 1].set_title("Lasso path")
@@ -107,7 +107,7 @@ plot_varying_sigma(corr, density, snr, [2, 10, 100], max_iter=100)
 
 
 ###############################################################################
-# Now if in addition x_true is less sparse, L1 solution is no longer L0 sol
+# Now if in addition w_true is less sparse, L1 solution is no longer L0 sol
 
 corr = 0.5
 snr = np.inf
