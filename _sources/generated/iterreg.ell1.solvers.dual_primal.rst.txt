@@ -1,0 +1,6 @@
+﻿iterreg.ell1.solvers.dual\_primal
+=================================
+
+.. currentmodule:: iterreg.ell1.solvers
+
+.. autofunction:: dual_primal
