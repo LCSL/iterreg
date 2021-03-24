@@ -10,10 +10,8 @@ recovery.
 import numpy as np
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score, mean_squared_error
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
 from celer.datasets import make_correlated_data
-from celer.homotopy import celer_path
 
 from iterreg.ell1 import dual_primal
 
