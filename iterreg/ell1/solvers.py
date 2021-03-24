@@ -43,8 +43,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, ret_all=True,
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal variable w.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     X : np.array, shape (n_samples, n_features)
         Design matrix.
     y : np.array, shape (n_samples,)
@@ -67,8 +67,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, ret_all=True,
     verbose : bool, optional (default=False)
         Verbosity of the algorithm.
 
-    Returns:
-    --------
+    Returns
+    -------
     w : np.array, shape (n_features,)
         Last or best primal iterate.
     theta : np.array, shape (n_samples,)

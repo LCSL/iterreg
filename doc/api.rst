@@ -14,6 +14,8 @@ Functions
 .. autosummary::
    :toctree: generated/
 
+   ell1.solvers.dual_primal
+
 
 Estimators
 

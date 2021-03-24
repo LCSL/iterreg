@@ -9,6 +9,27 @@ from iterreg.ell1 import dual_primal
 class BasisPursuitIterReg(LinearModel):
     def __init__(self, train_ratio=0.8, f_test=1, max_iter=1000, memory=20,
                  step=1, verbose=False):
+        """
+        Basis Pursuit with iterative regularization. Chambolle Pock iterations
+        are performed on the BP problem as long as the test MSE decreases.
+
+        Parameters
+        ----------
+        train_ratio : float, optional (default=0.8)
+            Fraction of the samples used in the training set.
+        f_test : int, optional (default=1)
+            The criterion to stop the solver is tested every `f_test`
+            iterations.
+        max_iter : int, optional (default=1000)
+            Maximum number of iterations performed.
+        memory : int, optional (default=20)
+            If the criterion does not decrease for `memory` computation,
+            the solver stops.
+        step : float, optional (default=1)
+            Trade-off between primal and dual stepsizes of the algorithm.
+            A higher `step` may slow down converge, but improve the sparsity
+            of the best iterate.
+        """
         self.train_ratio = train_ratio
         self.f_test = f_test
         self.verbose = verbose
