@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>iterreg.ell1.solvers.dual_primal &#8212; iterreg 0.1dev documentation</title>
+    <title>iterreg.sparse.solvers.dual_primal &#8212; iterreg 0.1dev documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -17,7 +17,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="iterreg.ell1.estimators.BasisPursuitIterReg" href="iterreg.ell1.estimators.BasisPursuitIterReg.html" />
+    <link rel="next" title="iterreg.sparse.estimators.SparseIterReg" href="iterreg.sparse.estimators.SparseIterReg.html" />
     <link rel="prev" title="API Documentation" href="../api.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -75,7 +75,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">iterreg.ell1.solvers.dual_primal</a></li>
+<li><a class="reference internal" href="#">iterreg.sparse.solvers.dual_primal</a></li>
 </ul>
 </ul>
 </li>
@@ -87,7 +87,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/iterreg.ell1.solvers.dual_primal.rst.txt"
+  <a href="../_sources/generated/iterreg.sparse.solvers.dual_primal.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -111,13 +111,13 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="iterreg-ell1-solvers-dual-primal">
-<h1>iterreg.ell1.solvers.dual_primal<a class="headerlink" href="#iterreg-ell1-solvers-dual-primal" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="iterreg-sparse-solvers-dual-primal">
+<h1>iterreg.sparse.solvers.dual_primal<a class="headerlink" href="#iterreg-sparse-solvers-dual-primal" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="iterreg.ell1.solvers.dual_primal">
-<code class="sig-prename descclassname"><span class="pre">iterreg.ell1.solvers.</span></code><code class="sig-name descname"><span class="pre">dual_primal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.ell1.solvers.dual_primal" title="Permalink to this definition">¶</a></dt>
+<dt id="iterreg.sparse.solvers.dual_primal">
+<code class="sig-prename descclassname"><span class="pre">iterreg.sparse.solvers.</span></code><code class="sig-name descname"><span class="pre">dual_primal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.sparse.solvers.dual_primal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Chambolle-Pock algorithm applied to the dual: interpolation on the
-primal variable w.</p>
+primal update.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -127,7 +127,12 @@ primal variable w.</p>
 </dd>
 <dt><strong>max_iter</strong><span class="classifier">int, optional (default=1000)</span></dt><dd><p>Maximum number of Chambolle-Pock iterations.</p>
 </dd>
-<dt><strong>f_store</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>Primal iterates are stored every <cite>f_store</cite> iterations.</p>
+<dt><strong>f_store</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>Primal iterates <cite>w</cite> are stored every <cite>f_store</cite> iterations.</p>
+</dd>
+<dt><strong>prox</strong><span class="classifier">callable or None</span></dt><dd><p>Proximal operator of the minimized regularizer. If None, a shrink
+is used, corresponding to the convex L1 regularizer.
+It is given <cite>(w, tau)</cite> as input (the primal iterate and the primal
+stepsize).</p>
 </dd>
 <dt><strong>ret_all</strong><span class="classifier">bool, optional (default=True)</span></dt><dd><p>If True, return all stored primal iterates.</p>
 </dd>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>iterreg.ell1.estimators.BasisPursuitIterReg &#8212; iterreg 0.1dev documentation</title>
+    <title>iterreg.sparse.estimators.SparseIterReg &#8212; iterreg 0.1dev documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -17,7 +17,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="iterreg.ell1.solvers.dual_primal" href="iterreg.ell1.solvers.dual_primal.html" />
+    <link rel="prev" title="iterreg.sparse.solvers.dual_primal" href="iterreg.sparse.solvers.dual_primal.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -74,7 +74,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">iterreg.ell1.estimators.BasisPursuitIterReg</a></li>
+<li><a class="reference internal" href="#">iterreg.sparse.estimators.SparseIterReg</a></li>
 </ul>
 </ul>
 </li>
@@ -86,7 +86,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/generated/iterreg.ell1.estimators.BasisPursuitIterReg.rst.txt"
+  <a href="../_sources/generated/iterreg.sparse.estimators.SparseIterReg.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -110,16 +110,17 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="iterreg-ell1-estimators-basispursuititerreg">
-<h1>iterreg.ell1.estimators.BasisPursuitIterReg<a class="headerlink" href="#iterreg-ell1-estimators-basispursuititerreg" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="iterreg-sparse-estimators-sparseiterreg">
+<h1>iterreg.sparse.estimators.SparseIterReg<a class="headerlink" href="#iterreg-sparse-estimators-sparseiterreg" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="iterreg.ell1.estimators.BasisPursuitIterReg">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">iterreg.ell1.estimators.</span></code><code class="sig-name descname"><span class="pre">BasisPursuitIterReg</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.ell1.estimators.BasisPursuitIterReg" title="Permalink to this definition">¶</a></dt>
+<dt id="iterreg.sparse.estimators.SparseIterReg">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">iterreg.sparse.estimators.</span></code><code class="sig-name descname"><span class="pre">SparseIterReg</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.sparse.estimators.SparseIterReg" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="iterreg.ell1.estimators.BasisPursuitIterReg.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.ell1.estimators.BasisPursuitIterReg.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basis Pursuit with iterative regularization. Chambolle Pock iterations
-are performed on the BP problem as long as the test MSE decreases.</p>
+<dt id="iterreg.sparse.estimators.SparseIterReg.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.sparse.estimators.SparseIterReg.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sparse Recovery with iterative regularization. Chambolle Pock
+iterations are performed on min J(w) s.t. Xw = y as long as the test
+MSE decreases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -133,9 +134,14 @@ iterations.</p>
 <dt><strong>memory</strong><span class="classifier">int, optional (default=20)</span></dt><dd><p>If the criterion does not decrease for <cite>memory</cite> computation,
 the solver stops.</p>
 </dd>
+<dt><strong>prox: callable or None</strong></dt><dd><p>The proximal operator of the regularizer J at level tau.
+If None, <cite>shrink</cite> is used, corresponding to L1.</p>
+</dd>
 <dt><strong>step</strong><span class="classifier">float, optional (default=1)</span></dt><dd><p>Trade-off between primal and dual stepsizes of the algorithm.
-A higher <cite>step</cite> may slow down converge, but improve the sparsity
+A higher <cite>step</cite> may slow down convergence, but improve the sparsity
 of the best iterate.</p>
+</dd>
+<dt><strong>verbose: bool, optional (default=False)</strong></dt><dd><p>Solver verbosity.</p>
 </dd>
 </dl>
 </dd>
@@ -149,8 +155,8 @@ of the best iterate.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#iterreg.ell1.estimators.BasisPursuitIterReg.__init__" title="iterreg.ell1.estimators.BasisPursuitIterReg.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([train_ratio, f_test, max_iter, …])</p></td>
-<td><p>Basis Pursuit with iterative regularization.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#iterreg.sparse.estimators.SparseIterReg.__init__" title="iterreg.sparse.estimators.SparseIterReg.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([train_ratio, f_test, max_iter, …])</p></td>
+<td><p>Sparse Recovery with iterative regularization.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">debias</span></code>(X, y)</p></td>
 <td><p></p></td>

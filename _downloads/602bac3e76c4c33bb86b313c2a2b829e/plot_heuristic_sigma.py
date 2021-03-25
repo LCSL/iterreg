@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score
 from celer.datasets import make_correlated_data
 
-from iterreg.ell1 import dual_primal
+from iterreg.sparse import dual_primal
 
 
 # data for the experiment:

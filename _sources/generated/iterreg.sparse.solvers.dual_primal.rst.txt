@@ -1,0 +1,6 @@
+﻿iterreg.sparse.solvers.dual\_primal
+===================================
+
+.. currentmodule:: iterreg.sparse.solvers
+
+.. autofunction:: dual_primal

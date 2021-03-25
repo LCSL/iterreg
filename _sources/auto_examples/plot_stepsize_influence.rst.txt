@@ -38,7 +38,7 @@ but is beneficial for support recovery.
     from celer.datasets import make_correlated_data
     from celer.homotopy import celer_path
 
-    from iterreg.ell1 import dual_primal
+    from iterreg.sparse import dual_primal
 
 
     n_samples = 500
@@ -303,7 +303,7 @@ tau * sigma = rho
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  25.883 seconds)
+   **Total running time of the script:** ( 0 minutes  30.900 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_stepsize_influence.py:

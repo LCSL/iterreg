@@ -13,7 +13,7 @@ from numpy.linalg import norm
 from sklearn.linear_model import LassoLars
 from joblib import Parallel, delayed
 
-from iterreg.ell1 import dual_primal
+from iterreg.sparse import dual_primal
 from iterreg.utils import make_sparse_data
 
 

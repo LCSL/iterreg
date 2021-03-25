@@ -1,0 +1,27 @@
+﻿iterreg.sparse.estimators.SparseIterReg
+=======================================
+
+.. currentmodule:: iterreg.sparse.estimators
+
+.. autoclass:: SparseIterReg
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SparseIterReg.__init__
+      ~SparseIterReg.debias
+      ~SparseIterReg.fit
+      ~SparseIterReg.get_params
+      ~SparseIterReg.predict
+      ~SparseIterReg.set_params
+   
+   
+
+   
+   
+   
