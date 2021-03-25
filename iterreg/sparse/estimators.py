@@ -3,10 +3,10 @@ from sklearn.linear_model._base import LinearModel
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
-from iterreg.ell1 import dual_primal
+from iterreg.sparse import dual_primal
 
 
-class BasisPursuitIterReg(LinearModel):
+class SparseIterReg(LinearModel):
     def __init__(self, train_ratio=0.8, f_test=1, max_iter=1000, memory=20,
                  step=1, verbose=False):
         """

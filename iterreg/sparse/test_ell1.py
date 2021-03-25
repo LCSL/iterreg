@@ -4,8 +4,8 @@ from numpy.linalg import norm
 from numpy.testing import assert_allclose, assert_array_less
 from celer.datasets import make_correlated_data
 
-from iterreg import BasisPursuitIterReg
-from iterreg.ell1.solvers import dual_primal
+from iterreg import SparseIterReg
+from iterreg.sparse.solvers import dual_primal
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
@@ -25,6 +25,6 @@ def test_dual_primal(solver):
 def test_BP():
     np.random.seed(0)
     X, y, _ = make_correlated_data(200, 300, random_state=0)
-    clf = BasisPursuitIterReg(verbose=True, f_test=1, memory=30).fit(X, y)
+    clf = SparseIterReg(verbose=True, f_test=1, memory=30).fit(X, y)
     np.testing.assert_equal(np.argmin(clf.mses),
                             len(clf.mses) - clf.memory - 1)

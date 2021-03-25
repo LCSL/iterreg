@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from celer.datasets import make_correlated_data
 from celer.homotopy import celer_path
 
-from iterreg.ell1 import dual_primal
+from iterreg.sparse import dual_primal
 
 
 n_samples = 500

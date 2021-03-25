@@ -7,14 +7,10 @@ from scipy import sparse
 from iterreg.utils import shrink, power_method
 
 
-def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
+def primal_dual(X, y, step=1, max_iter=1000, f_store=1, alpha_prec=None,
                 verbose=False):
-    """
-    Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
-    """
+    """Chambolle-Pock algorithm with relaxation parameter equal to 1."""
     n, d = X.shape
-    if prox is None:
-        prox = shrink
     if alpha_prec is not None:
         assert 0 <= alpha_prec <= 2
         sigma = 1. / np.sum(np.abs(X) ** alpha_prec, axis=1)
@@ -31,9 +27,9 @@ def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
     theta = np.zeros(n)
 
     for k in range(max_iter):
-        theta += sigma * (X @ w_bar - y)  # interpolate here, with parameter 1
+        theta += sigma * (X @ w_bar - y)
         w_old = w.copy()
-        w = prox(w - tau * (X.T @ theta), tau)
+        w = shrink(w - tau * (X.T @ theta), tau)
         w_bar[:] = 2 * w - w_old
         if k % f_store == 0:
             all_w[k // f_store] = w
@@ -42,10 +38,10 @@ def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
+def dual_primal(X, y, max_iter=1000, f_store=10, ret_all=True,
                 callback=None, memory=10, step=1, rho=0.99, verbose=False,):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
-    primal update.
+    primal variable w.
 
     Parameters
     ----------
@@ -56,12 +52,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
     max_iter : int, optional (default=1000)
         Maximum number of Chambolle-Pock iterations.
     f_store : int, optional (default=10)
-        Primal iterates `w` are stored every `f_store` iterations.
-    prox : callable or None
-        Proximal operator of the minimized regularizer. If None, a shrink
-        is used, corresponding to the convex L1 regularizer.
-        It is given `(w, tau)` as input (the primal iterate and the primal
-        stepsize).
+        Primal iterates are stored every `f_store` iterations.
     ret_all : bool, optional (default=True)
         If True, return all stored primal iterates.
     callback : callable or None, optional (default=None)
@@ -93,9 +84,6 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
 
     crits = np.zeros(max_iter // f_store)
 
-    if prox is None:
-        prox = shrink
-
     if callback is not None:
         best_crit = np.inf
         best_w = np.zeros(d)
@@ -111,7 +99,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
     theta_old = np.zeros(n)
 
     for k in range(max_iter):
-        w = prox(w - tau * X.T @ (2 * theta - theta_old), tau)  # interpolate
+        w = shrink(w - tau * X.T @ (2 * theta - theta_old), tau)
         theta_old[:] = theta
         theta += sigma * (X @ w - y)
         if k % f_store == 0:
