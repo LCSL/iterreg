@@ -14,7 +14,7 @@ Functions
 .. autosummary::
    :toctree: generated/
 
-   ell1.solvers.dual_primal
+   sparse.solvers.dual_primal
 
 
 Estimators
@@ -22,4 +22,4 @@ Estimators
 .. autosummary::
    :toctree: generated/
 
-   ell1.estimators.BasisPursuitIterReg
+   sparse.estimators.SparseIterReg

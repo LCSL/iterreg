@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from numpy.linalg import norm
 from sklearn.linear_model import LassoLars
 
-from iterreg.ell1 import primal_dual
+from iterreg.sparse import primal_dual
 from iterreg.utils import make_sparse_data
 
 from celer.plot_utils import configure_plt

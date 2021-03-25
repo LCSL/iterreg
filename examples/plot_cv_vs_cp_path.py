@@ -15,8 +15,8 @@ from libsvmdata import fetch_libsvm
 from sklearn.model_selection import KFold
 from joblib import Parallel, delayed
 
-from iterreg.ell1 import dual_primal
-from iterreg.ell1.estimators import BasisPursuitIterReg
+from iterreg.sparse import dual_primal
+from iterreg.sparse.estimators import SparseIterReg
 
 
 dataset = 'rcv1_train'
@@ -81,7 +81,7 @@ plt.show(block=False)
 
 ##############################################################################
 # Now do the timings a posteriori, as if we kenw the optimal iteration/lambda
-bp = BasisPursuitIterReg(max_iter=best_iter, memory=best_iter + 1)
+bp = SparseIterReg(max_iter=best_iter, memory=best_iter + 1)
 t0 = time.perf_counter()
 bp.fit(X, y)
 time_cp = time.perf_counter() - t0
