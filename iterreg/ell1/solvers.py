@@ -8,7 +8,7 @@ from iterreg.utils import shrink, power_method
 
 
 def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
-                verbose=False):
+                step=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
     """
