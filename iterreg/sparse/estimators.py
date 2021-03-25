@@ -8,10 +8,11 @@ from iterreg.sparse import dual_primal
 
 class SparseIterReg(LinearModel):
     def __init__(self, train_ratio=0.8, f_test=1, max_iter=1000, memory=20,
-                 step=1, verbose=False):
+                 prox=None, step=1, verbose=False):
         """
-        Basis Pursuit with iterative regularization. Chambolle Pock iterations
-        are performed on the BP problem as long as the test MSE decreases.
+        Sparse Recovery with iterative regularization. Chambolle Pock
+        iterations are performed on min J(w) s.t. Xw = y as long as the test
+        MSE decreases.
 
         Parameters
         ----------
@@ -25,10 +26,15 @@ class SparseIterReg(LinearModel):
         memory : int, optional (default=20)
             If the criterion does not decrease for `memory` computation,
             the solver stops.
+        prox: callable or None
+            The proximal operator of the regularizer J at level tau.
+            If None, `shrink` is used, corresponding to L1.
         step : float, optional (default=1)
             Trade-off between primal and dual stepsizes of the algorithm.
-            A higher `step` may slow down converge, but improve the sparsity
+            A higher `step` may slow down convergence, but improve the sparsity
             of the best iterate.
+        verbose: bool, optional (default=False)
+            Solver verbosity.
         """
         self.train_ratio = train_ratio
         self.f_test = f_test
@@ -36,6 +42,7 @@ class SparseIterReg(LinearModel):
         self.max_iter = max_iter
         self.memory = memory
         self.step = step
+        self.prox = prox
 
     def fit(self, X, y, train_idx=None, test_idx=None):
         if train_idx is None or test_idx is None:
@@ -50,7 +57,8 @@ class SparseIterReg(LinearModel):
 
         w, thetas, mses = dual_primal(
             X_train, y_train, step=self.step, max_iter=self.max_iter,
-            f_store=self.f_test, callback=callback, memory=self.memory,
+            f_store=self.f_test, callback=callback, prox=self.prox,
+            memory=self.memory,
             ret_all=False, verbose=self.verbose)
 
         self.coef_ = w
