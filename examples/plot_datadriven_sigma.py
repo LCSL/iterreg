@@ -1,6 +1,6 @@
 """
 =====================================================
-Heuristic for dual stepsize choice in sparse recovery
+Data-driven for dual stepsize choice in sparse recovery
 =====================================================
 
 From the data, a good dual stepsize can be estimated in the case of sparse
@@ -12,9 +12,11 @@ from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score
 from celer.datasets import make_correlated_data
+from celer.plot_utils import configure_plt
 
 from iterreg.sparse import dual_primal
 
+configure_plt()
 
 # data for the experiment:
 n_samples = 200
@@ -43,14 +45,15 @@ X, y, w_true = make_correlated_data(
 # :math:`j` such that :math:`2 \sigma |X_j^\top y| > 1`, hence we pick
 # :math:`1 / \sigma` as a quantile of :math:`2X^\top y`
 
-fig, axarr = plt.subplots(2, 1, sharex=True, constrained_layout=True)
+fig, axarr = plt.subplots(2, 1, sharex=True, constrained_layout=True,
+                          figsize=(7.15, 3))
 
 
-sigma_heuri = 1. / np.sort(np.abs(X.T @ y))[int(0.99 * n_features)] / 2
-step_heuri = 1 / (sigma_heuri * norm(X, ord=2))
+sigma_good = 1. / np.sort(np.abs(X.T @ y))[int(0.99 * n_features)] / 2
+step_good = 1 / (sigma_good * norm(X, ord=2))
 
-steps = [1, 100, step_heuri]
-labels = [r"$\sigma=\tau$", r"$\sigma \ll \tau$", "heuristic"]
+steps = [1, 100, step_good]
+labels = [r"$\sigma=\tau$", r"$\sigma \ll \tau$", "data-driven"]
 all_w = dict()
 
 for step, label in zip(steps, labels):
@@ -61,10 +64,11 @@ for step, label in zip(steps, labels):
     axarr[0].plot(f1_scores, label=label)
     axarr[1].plot(supp_size)
 
-axarr[0].legend()
+axarr[0].legend(ncol=3)
 axarr[0].set_ylim(0, 1)
 axarr[0].set_ylabel('F1 score for support')
 axarr[1].set_ylabel(r"$||w_k||_0$")
 axarr[1].set_xlabel(r'Chambolle Pock iteration')
+
 
 plt.show(block=False)
