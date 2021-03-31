@@ -21,10 +21,10 @@ Examples Gallery
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_heuristic_sigma_thumb.png
-     :alt: Heuristic for dual stepsize choice in sparse recovery
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_datadriven_sigma_thumb.png
+     :alt: Data-driven for dual stepsize choice in sparse recovery
 
-     :ref:`sphx_glr_auto_examples_plot_heuristic_sigma.py`
+     :ref:`sphx_glr_auto_examples_plot_datadriven_sigma.py`
 
 .. raw:: html
 
@@ -34,7 +34,7 @@ Examples Gallery
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_heuristic_sigma
+   /auto_examples/plot_datadriven_sigma
 
 .. raw:: html
 

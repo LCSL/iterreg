@@ -163,7 +163,7 @@ package) and iterative regularization (ours).</p>
 
 <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">best_alpha</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">clf</span><span class="o">.</span><span class="n">alpha_</span></a>
 
-<a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">axarr</span></a> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span>
+<a href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">axarr</span></a> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span>
     <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">axarr</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.semilogx.html#matplotlib.axes.Axes.semilogx" title="matplotlib.axes.Axes.semilogx" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clf</span><span class="o">.</span><span class="n">alphas_</span></a> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clf</span><span class="o">.</span><span class="n">alphas_</span></a><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clf</span><span class="o">.</span><span class="n">mse_path_</span></a><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
@@ -199,21 +199,22 @@ Downloading data from https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/bi
 
 
 file_sizes:   0%|                                   | 0.00/13.7M [00:00&lt;?, ?B/s]
-file_sizes:   0%|                           | 24.6k/13.7M [00:00&lt;02:08, 107kB/s]
-file_sizes:   0%|                           | 49.2k/13.7M [00:00&lt;02:08, 106kB/s]
-file_sizes:   1%|2                           | 106k/13.7M [00:00&lt;01:19, 171kB/s]
-file_sizes:   2%|4                           | 221k/13.7M [00:00&lt;00:45, 299kB/s]
-file_sizes:   3%|9                           | 451k/13.7M [00:01&lt;00:24, 548kB/s]
-file_sizes:   7%|#7                         | 909k/13.7M [00:01&lt;00:12, 1.04MB/s]
-file_sizes:  13%|###4                      | 1.83M/13.7M [00:01&lt;00:05, 1.99MB/s]
-file_sizes:  27%|######9                   | 3.66M/13.7M [00:01&lt;00:02, 3.85MB/s]
-file_sizes:  38%|#########9                | 5.23M/13.7M [00:02&lt;00:01, 4.77MB/s]
-file_sizes:  50%|############8             | 6.81M/13.7M [00:02&lt;00:01, 5.39MB/s]
-file_sizes:  61%|###############8          | 8.38M/13.7M [00:02&lt;00:00, 5.80MB/s]
-file_sizes:  72%|##################8       | 9.95M/13.7M [00:02&lt;00:00, 6.10MB/s]
-file_sizes:  84%|#####################8    | 11.5M/13.7M [00:03&lt;00:00, 6.31MB/s]
-file_sizes:  95%|########################8 | 13.1M/13.7M [00:03&lt;00:00, 6.45MB/s]
-file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 4.22MB/s]
+file_sizes:   0%|                           | 24.6k/13.7M [00:00&lt;02:03, 111kB/s]
+file_sizes:   0%|                           | 49.2k/13.7M [00:00&lt;02:03, 111kB/s]
+file_sizes:   1%|2                           | 106k/13.7M [00:00&lt;01:16, 179kB/s]
+file_sizes:   2%|4                           | 221k/13.7M [00:00&lt;00:43, 311kB/s]
+file_sizes:   2%|6                           | 319k/13.7M [00:01&lt;00:37, 359kB/s]
+file_sizes:   6%|#6                          | 811k/13.7M [00:01&lt;00:13, 988kB/s]
+file_sizes:   9%|##2                       | 1.20M/13.7M [00:01&lt;00:10, 1.24MB/s]
+file_sizes:  23%|######                    | 3.17M/13.7M [00:01&lt;00:02, 3.63MB/s]
+file_sizes:  35%|########9                 | 4.74M/13.7M [00:02&lt;00:01, 4.71MB/s]
+file_sizes:  46%|###########9              | 6.32M/13.7M [00:02&lt;00:01, 5.45MB/s]
+file_sizes:  57%|##############9           | 7.89M/13.7M [00:02&lt;00:00, 5.90MB/s]
+file_sizes:  69%|#################9        | 9.46M/13.7M [00:02&lt;00:00, 6.32MB/s]
+file_sizes:  80%|####################8     | 11.0M/13.7M [00:02&lt;00:00, 6.56MB/s]
+file_sizes:  92%|#######################8  | 12.6M/13.7M [00:03&lt;00:00, 6.72MB/s]
+file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 6.24MB/s]
+file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 4.12MB/s]
 Successfully downloaded file to /home/circleci/celer_data/libsvm/binary/rcv1_train.binary.bz2
 Decompressing...
 Loading svmlight file...
@@ -246,14 +247,14 @@ Loading svmlight file...
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for CP: 0.083s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for CP: 0.139s
 CP early stop needs 25 iter
 LassoCV optimal lambda: 4.33e-03 lambda_max
-CP time: 0.083 s
-CV time: 10.694 s
+CP time: 0.139 s
+CV time: 10.167 s
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  2.144 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  0.819 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-cv-vs-cp-path-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/3f72d295e8814de434ebe7b26eaebece/plot_cv_vs_cp_path.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_cv_vs_cp_path.py</span></code></a></p>
