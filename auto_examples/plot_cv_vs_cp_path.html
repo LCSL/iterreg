@@ -131,7 +131,7 @@ package) and iterative regularization (ours).</p>
 <span class="kn">from</span> <span class="nn">iterreg.sparse.estimators</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class"><span class="n">SparseIterReg</span></a>
 
 
-<span class="n">dataset</span> <span class="o">=</span> <span class="s1">&#39;rcv1_train&#39;</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="s1">&#39;rcv1.binary&#39;</span>
 <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 <span class="c1"># make dataset smaller for faster example:</span>
 <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">[:</span><span class="mi">5000</span><span class="p">]</span>
@@ -194,27 +194,26 @@ package) and iterative regularization (ours).</p>
 </div>
 <img alt="Tikhonov regularization, Iterative regularization" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_cv_vs_cp_path_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset: rcv1_train
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset: rcv1.binary
 Downloading data from https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/rcv1_train.binary.bz2 (13.1 MB)
 
 
 file_sizes:   0%|                                   | 0.00/13.7M [00:00&lt;?, ?B/s]
-file_sizes:   0%|                           | 24.6k/13.7M [00:00&lt;02:03, 111kB/s]
-file_sizes:   0%|                           | 49.2k/13.7M [00:00&lt;02:03, 111kB/s]
-file_sizes:   1%|2                           | 106k/13.7M [00:00&lt;01:16, 179kB/s]
-file_sizes:   2%|4                           | 221k/13.7M [00:00&lt;00:43, 311kB/s]
-file_sizes:   2%|6                           | 319k/13.7M [00:01&lt;00:37, 359kB/s]
-file_sizes:   6%|#6                          | 811k/13.7M [00:01&lt;00:13, 988kB/s]
-file_sizes:   9%|##2                       | 1.20M/13.7M [00:01&lt;00:10, 1.24MB/s]
-file_sizes:  23%|######                    | 3.17M/13.7M [00:01&lt;00:02, 3.63MB/s]
-file_sizes:  35%|########9                 | 4.74M/13.7M [00:02&lt;00:01, 4.71MB/s]
-file_sizes:  46%|###########9              | 6.32M/13.7M [00:02&lt;00:01, 5.45MB/s]
-file_sizes:  57%|##############9           | 7.89M/13.7M [00:02&lt;00:00, 5.90MB/s]
-file_sizes:  69%|#################9        | 9.46M/13.7M [00:02&lt;00:00, 6.32MB/s]
-file_sizes:  80%|####################8     | 11.0M/13.7M [00:02&lt;00:00, 6.56MB/s]
-file_sizes:  92%|#######################8  | 12.6M/13.7M [00:03&lt;00:00, 6.72MB/s]
-file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 6.24MB/s]
-file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 4.12MB/s]
+file_sizes:   0%|                           | 24.6k/13.7M [00:00&lt;02:02, 112kB/s]
+file_sizes:   0%|                           | 49.2k/13.7M [00:00&lt;02:02, 112kB/s]
+file_sizes:   1%|2                           | 106k/13.7M [00:00&lt;01:15, 180kB/s]
+file_sizes:   2%|4                           | 221k/13.7M [00:00&lt;00:42, 315kB/s]
+file_sizes:   3%|9                           | 451k/13.7M [00:01&lt;00:22, 578kB/s]
+file_sizes:   7%|#7                         | 909k/13.7M [00:01&lt;00:11, 1.09MB/s]
+file_sizes:  13%|###4                      | 1.83M/13.7M [00:01&lt;00:05, 2.10MB/s]
+file_sizes:  30%|#######9                  | 4.19M/13.7M [00:01&lt;00:01, 4.79MB/s]
+file_sizes:  42%|##########9               | 5.76M/13.7M [00:01&lt;00:01, 5.53MB/s]
+file_sizes:  53%|#############8            | 7.33M/13.7M [00:02&lt;00:01, 6.04MB/s]
+file_sizes:  61%|###############8          | 8.38M/13.7M [00:02&lt;00:00, 5.70MB/s]
+file_sizes:  74%|###################3      | 10.2M/13.7M [00:02&lt;00:00, 6.48MB/s]
+file_sizes:  86%|######################3   | 11.8M/13.7M [00:02&lt;00:00, 6.68MB/s]
+file_sizes:  97%|#########################3| 13.4M/13.7M [00:03&lt;00:00, 6.82MB/s]
+file_sizes: 100%|##########################| 13.7M/13.7M [00:03&lt;00:00, 4.45MB/s]
 Successfully downloaded file to /home/circleci/celer_data/libsvm/binary/rcv1_train.binary.bz2
 Decompressing...
 Loading svmlight file...
@@ -247,14 +246,14 @@ Loading svmlight file...
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for CP: 0.139s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for CP: 0.082s
 CP early stop needs 25 iter
 LassoCV optimal lambda: 4.33e-03 lambda_max
-CP time: 0.139 s
-CV time: 10.167 s
+CP time: 0.082 s
+CV time: 9.610 s
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  0.819 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  55.335 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-cv-vs-cp-path-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/3f72d295e8814de434ebe7b26eaebece/plot_cv_vs_cp_path.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_cv_vs_cp_path.py</span></code></a></p>
@@ -279,7 +278,7 @@ CV time: 10.167 s
     </p>
     <p>
         &copy; Copyright 2020, Mathurin Massias.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
     </p>
   </div>
 </footer>
