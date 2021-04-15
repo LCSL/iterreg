@@ -19,7 +19,7 @@ from iterreg.sparse import dual_primal
 from iterreg.sparse.estimators import SparseIterReg
 
 
-dataset = 'rcv1_train'
+dataset = 'rcv1.binary'
 X, y = fetch_libsvm(dataset)
 # make dataset smaller for faster example:
 X = X[:5000]
