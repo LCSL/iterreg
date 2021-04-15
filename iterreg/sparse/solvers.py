@@ -217,7 +217,7 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
             # TODO this si the Lasso energy, not adapted to other prox
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
-            print(t, E[t // f_store])
+            # print(t, E[t // f_store])
 
     return w, all_w, E
 
