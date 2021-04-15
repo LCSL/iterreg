@@ -143,7 +143,9 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
 
 
 @njit
-def cd_primal_dual(X, y, max_iter=100, f_store=1, verbose=False):
+def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
+    if prox is None:
+        prox = shrink
     n, d = X.shape
     taus = 1. / (2. * (X ** 2).sum(axis=0))
     res = - y  # residuals: Ax - b
@@ -155,8 +157,8 @@ def cd_primal_dual(X, y, max_iter=100, f_store=1, verbose=False):
         for j in range(d):
             theta_bar = theta + res / d  # doing stuff inplace would be faster
             old = w[j]
-            w[j] = shrink(w[j] - taus[j] * X[:, j] @
-                          (2 * theta_bar - theta), taus[j])
+            w[j] = prox(w[j] - taus[j] * X[:, j] @
+                        (2 * theta_bar - theta), taus[j])
             theta *= (1. - 1. / d)
             theta += theta_bar / d
             if w[j] != old:
@@ -170,17 +172,9 @@ def cd_primal_dual(X, y, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def ST(x, u):
-    if x > u:
-        return x - u
-    elif x < -u:
-        return x + u
-    else:
-        return 0.
-
-
-@njit
-def cd_lasso(X, y, alpha, max_iter, f_store=1):
+def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+    if prox is None:
+        prox = shrink
     p = X.shape[1]
     lc = np.zeros(p)
     for j in range(p):
@@ -193,7 +187,7 @@ def cd_lasso(X, y, alpha, max_iter, f_store=1):
     for t in range(max_iter):
         for j in range(p):
             old = w[j]
-            w[j] = ST(old + X[:, j].dot(R) / lc[j], alpha / lc[j])
+            w[j] = shrink(old + X[:, j].dot(R) / lc[j], alpha / lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
@@ -205,7 +199,9 @@ def cd_lasso(X, y, alpha, max_iter, f_store=1):
 
 
 @njit
-def ista_lasso(X, y, alpha, max_iter, f_store=1):
+def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+    if prox is None:
+        prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -218,6 +214,7 @@ def ista_lasso(X, y, alpha, max_iter, f_store=1):
         tmp = w + 1. / L * X.T @ R
         w[:] = shrink(tmp, alpha / L)
         if t % f_store == 0:
+            # TODO this si the Lasso energy, not adapted to other prox
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
             print(t, E[t // f_store])
@@ -226,7 +223,9 @@ def ista_lasso(X, y, alpha, max_iter, f_store=1):
 
 
 @njit
-def fista_lasso(X, y, alpha, max_iter, f_store=1):
+def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+    if prox is None:
+        prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -243,6 +242,7 @@ def fista_lasso(X, y, alpha, max_iter, f_store=1):
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
 
         if t % f_store == 0:
+            # TODO this si the Lasso energy, not adapted to other prox
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
                 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
