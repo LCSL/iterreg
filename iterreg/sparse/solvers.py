@@ -172,7 +172,8 @@ def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
+                       verbose=False):
     if prox is None:
         prox = shrink
     p = X.shape[1]
@@ -193,13 +194,15 @@ def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
         if t % f_store == 0:
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
-            print(t, E[t // f_store])
+            if verbose:
+                print(t, E[t // f_store])
 
     return w, all_w, E
 
 
 @njit
-def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
+               verbose=False):
     if prox is None:
         prox = shrink
     p = X.shape[1]
@@ -214,16 +217,18 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
         tmp = w + 1. / L * X.T @ R
         w[:] = shrink(tmp, alpha / L)
         if t % f_store == 0:
-            # TODO this si the Lasso energy, not adapted to other prox
+            # TODO this is the Lasso energy, not adapted to other prox
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
-            # print(t, E[t // f_store])
+            if verbose:
+                print(t, E[t // f_store])
 
     return w, all_w, E
 
 
 @njit
-def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
+def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
+                verbose=False):
     if prox is None:
         prox = shrink
     p = X.shape[1]
@@ -242,9 +247,10 @@ def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
 
         if t % f_store == 0:
-            # TODO this si the Lasso energy, not adapted to other prox
+            # TODO this is the Lasso energy, not adapted to other prox
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
                 2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
-            print(t, E[t // f_store])
+            if verbose:
+                print(t, E[t // f_store])
     return w, all_w, E
