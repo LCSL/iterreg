@@ -1,6 +1,6 @@
 import numpy as np
 
-from numba import njit
+from numba import njit, jit
 from numpy.linalg import norm
 from scipy import sparse
 
@@ -198,7 +198,7 @@ def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     return w, all_w, E
 
 
-@njit
+# @njit
 def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     if prox is None:
         prox = shrink
@@ -212,7 +212,7 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     for t in range(max_iter):
         R[:] = y - X @ w
         tmp = w + 1. / L * X.T @ R
-        w[:] = shrink(tmp, alpha / L)
+        w[:] = prox(tmp, alpha / L)
         if t % f_store == 0:
             # TODO this si the Lasso energy, not adapted to other prox
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
@@ -222,7 +222,7 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     return w, all_w, E
 
 
-@njit
+# @njit
 def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     if prox is None:
         prox = shrink
@@ -236,7 +236,7 @@ def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
 
     for t in range(max_iter):
         w_old = w.copy()
-        w[:] = shrink(z - X.T @ (X @ z - y) / L, alpha / L)
+        w[:] = prox(z - X.T @ (X @ z - y) / L, alpha / L)
         t_old = t_new
         t_new = (1. + np.sqrt(1 + 4 * t_old ** 2)) / 2.
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
