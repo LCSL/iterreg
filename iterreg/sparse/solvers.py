@@ -1,10 +1,10 @@
 import numpy as np
 
-from numba import njit, jit
+from numba import njit
 from numpy.linalg import norm
 from scipy import sparse
 
-from iterreg.utils import shrink, power_method
+from iterreg.utils import power_method, shrink
 
 
 def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
@@ -172,9 +172,9 @@ def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
-    if prox is None:
-        prox = shrink
+def cd_tikhonov_sparse(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1):
+    # if prox is None:
+    #     prox = shrink
     p = X.shape[1]
     lc = np.zeros(p)
     for j in range(p):
@@ -198,34 +198,37 @@ def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
     return w, all_w, E
 
 
-# @njit
-def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
-    if prox is None:
-        prox = shrink
+@njit
+def ista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1):
+    # if prox is None:
+    #     prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
     E = np.zeros(max_iter // f_store)
-    R = y.copy().astype(np.float64)
+    # R = y.copy().astype(np.float64)
     all_w = np.zeros((max_iter // f_store, p))
 
     for t in range(max_iter):
-        R[:] = y - X @ w
-        tmp = w + 1. / L * X.T @ R
-        w[:] = prox(tmp, alpha / L)
+        # R[:] = y - X @ w
+        # tmp = w + 1. / L * X.T @ R
+        # w[:] = prox(tmp, alpha / L)
+        w[:] = prox(w - 1. / L * X.T @ (X @ w - y), alpha / L)
         if t % f_store == 0:
             # TODO this si the Lasso energy, not adapted to other prox
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            # E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            E[t // f_store] = ((X @ w - y) ** 2).sum() / \
+                2. + alpha * np.sum(np.abs(w))
             all_w[t // f_store] = w
             print(t, E[t // f_store])
 
     return w, all_w, E
 
 
-# @njit
-def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1):
-    if prox is None:
-        prox = shrink
+@njit
+def fista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1):
+    # if prox is None:
+    #     prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
