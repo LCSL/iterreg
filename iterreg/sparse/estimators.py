@@ -4,11 +4,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 from iterreg.sparse import dual_primal
+from iterreg.utils import shrink
 
 
 class SparseIterReg(LinearModel):
     def __init__(self, train_ratio=0.8, f_test=1, max_iter=1000, memory=20,
-                 prox=None, step=1, verbose=False):
+                 prox=shrink, step=1, verbose=False):
         """
         Sparse Recovery with iterative regularization. Chambolle Pock
         iterations are performed on min J(w) s.t. Xw = y as long as the test
@@ -26,9 +27,9 @@ class SparseIterReg(LinearModel):
         memory : int, optional (default=20)
             If the criterion does not decrease for `memory` computation,
             the solver stops.
-        prox: callable or None
+        prox: callable
             The proximal operator of the regularizer J at level tau.
-            If None, `shrink` is used, corresponding to L1.
+            By default, `shrink` is used, corresponding to L1.
         step : float, optional (default=1)
             Trade-off between primal and dual stepsizes of the algorithm.
             A higher `step` may slow down convergence, but improve the sparsity

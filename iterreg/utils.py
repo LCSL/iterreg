@@ -1,5 +1,4 @@
 import os
-import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -28,6 +27,12 @@ def plot_legend_apart(ax, figname, ncol=None):
 def shrink(u, tau):
     """Soft-thresholding of vector u at level tau > 0."""
     return np.sign(u) * np.maximum(0., np.abs(u) - tau)
+
+
+@njit
+def ell1(w):
+    "L1 penalty applied pointwise to vector w."
+    return np.abs(w)
 
 
 def bregman_div(x, y, subgrad=None):
@@ -77,23 +82,3 @@ def fetch_leukemia():
     y = np.array([- 1 if lab == 'ALL' else 1 for lab in data.target])
     X = data.data
     return np.asfortranarray(X), y.astype(float)
-
-
-def power_method(X, max_iter=100, rtol=1e-6):
-    np.random.seed(1)
-    u = np.random.randn(X.shape[0])
-    v = np.random.randn(X.shape[1])
-    spec_norm = 0
-    for _ in range(max_iter):
-        spec_norm_old = spec_norm
-        u[:] = X @ v
-        u /= norm(u)
-        v[:] = X.T @ u
-        spec_norm = norm(v)
-        v /= spec_norm
-        delta = np.abs(spec_norm - spec_norm_old) / spec_norm
-        if delta < rtol:
-            break
-    else:
-        warnings.warn('Did not converge, %s > %s' % (delta, rtol))
-    return spec_norm

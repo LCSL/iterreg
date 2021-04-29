@@ -3,24 +3,23 @@ import numpy as np
 from numba import njit
 from numpy.linalg import norm
 from scipy import sparse
+from scipy.sparse.linalg import svds
 
-from iterreg.utils import shrink, power_method
+from iterreg.utils import shrink, ell1
 
 
-def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
+def primal_dual(X, y, max_iter=1000, f_store=1, prox=shrink, alpha_prec=None,
                 step=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
     """
     n, d = X.shape
-    if prox is None:
-        prox = shrink
     if alpha_prec is not None:
         assert 0 <= alpha_prec <= 2
         sigma = 1. / np.sum(np.abs(X) ** alpha_prec, axis=1)
         tau = 1. / np.sum(np.abs(X) ** (2 - alpha_prec), axis=0)
     else:
-        L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+        L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
         # stepsizes such that tau * sigma * L ** 2 < 1
         tau = step / L
         sigma = 0.99 / (step * L)
@@ -42,7 +41,7 @@ def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
+def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
                 callback=None, memory=10, step=1, rho=0.99, verbose=False,):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal update.
@@ -57,8 +56,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
         Maximum number of Chambolle-Pock iterations.
     f_store : int, optional (default=10)
         Primal iterates `w` are stored every `f_store` iterations.
-    prox : callable or None
-        Proximal operator of the minimized regularizer. If None, a shrink
+    prox : callable, optional (default=shrink)
+        Proximal operator of the minimized regularizer. By default, a shrink
         is used, corresponding to the convex L1 regularizer.
         It is given `(w, tau)` as input (the primal iterate and the primal
         stepsize).
@@ -89,12 +88,9 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
         `ret_all` is True.
     """
     n, d = X.shape
-    L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+    L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
 
     crits = np.zeros(max_iter // f_store)
-
-    if prox is None:
-        prox = shrink
 
     if callback is not None:
         best_crit = np.inf
@@ -143,9 +139,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
 
 
 @njit
-def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
-    if prox is None:
-        prox = shrink
+def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
     n, d = X.shape
     taus = 1. / (2. * (X ** 2).sum(axis=0))
     res = - y  # residuals: Ax - b
@@ -172,10 +166,8 @@ def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
-                       verbose=False):
-    if prox is None:
-        prox = shrink
+def cd_tikhonov_sparse(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
+                       f_store=1, verbose=False):
     p = X.shape[1]
     lc = np.zeros(p)
     for j in range(p):
@@ -192,7 +184,7 @@ def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -201,10 +193,8 @@ def cd_tikhonov_sparse(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
 
 
 @njit
-def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
+def ista_lasso(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
                verbose=False):
-    if prox is None:
-        prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -216,8 +206,7 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
         R[:] = y - X @ w
         w[:] = shrink(w + X.T @ R / L, alpha / L)
         if t % f_store == 0:
-            # TODO this is the Lasso energy, not adapted to other prox
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -226,10 +215,8 @@ def ista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
 
 
 @njit
-def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
+def fista_lasso(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
                 verbose=False):
-    if prox is None:
-        prox = shrink
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -246,9 +233,8 @@ def fista_lasso(X, y, alpha, prox=None, max_iter=1_000, f_store=1,
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
 
         if t % f_store == 0:
-            # TODO this is the Lasso energy, not adapted to other prox
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
-                2. + alpha * np.sum(np.abs(w))
+                2. + alpha * np.sum(pen(w))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
