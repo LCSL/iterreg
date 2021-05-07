@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from scipy import sparse
 
 from iterreg.utils import shrink, power_method
-from nonconvex.prox_functions import MCP, prox_MCP, prox_MCP_scalar
+from nonconvex.prox_functions import select_penalty, select_prox, prox_MCP, prox_MCP_scalar, MCP, select_prox_sc
 
 
 def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
@@ -173,7 +173,7 @@ def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
+def cd_tikhonov_sparse(X, y, alpha, penalty, max_iter=1_000, f_store=1,
                        verbose=False):
     p = X.shape[1]
     lc = np.zeros(p)
@@ -187,11 +187,11 @@ def cd_tikhonov_sparse(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
     for t in range(max_iter):
         for j in range(p):
             old = w[j]
-            w[j] = shrink(old + X[:, j].dot(R) / lc[j], alpha / lc[j])
+            w[j] = select_prox_sc(penalty, old + X[:, j].dot(R) / lc[j], alpha / lc[j], lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(select_penalty(penalty, w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -200,7 +200,7 @@ def cd_tikhonov_sparse(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
 
 
 @njit
-def ista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
+def ista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
                verbose=False):
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -211,10 +211,10 @@ def ista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         R[:] = y - X @ w
-        w[:] = prox(w + X.T @ R / L, alpha / L)
+        w[:] = select_prox(penalty, w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
             # TODO this is the Lasso energy, not adapted to other prox
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(np.abs(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(select_penalty(penalty, w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -223,7 +223,7 @@ def ista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
 
 
 @njit
-def fista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
+def fista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
                 verbose=False):
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -235,7 +235,7 @@ def fista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         w_old = w.copy()
-        w[:] = prox(z - X.T @ (X @ z - y) / L, alpha / L)
+        w[:] = select_prox(penalty, z - X.T @ (X @ z - y) / L, alpha / L, L)
         t_old = t_new
         t_new = (1. + np.sqrt(1 + 4 * t_old ** 2)) / 2.
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
@@ -243,7 +243,7 @@ def fista_lasso(X, y, alpha, prox=shrink, max_iter=1_000, f_store=1,
         if t % f_store == 0:
             # TODO this is the Lasso energy, not adapted to other prox
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
-                2. + alpha * np.sum(np.abs(w))
+                2. + np.sum(select_penalty(penalty, w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -270,7 +270,7 @@ def cd_tikhonov_sparse_MCP(X, y, alpha, prox=prox_MCP, max_iter=1_000,
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(MCP(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(MCP(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -292,7 +292,7 @@ def ista_MCP(X, y, alpha, prox=prox_MCP, max_iter=1_000, f_store=1,
         R[:] = y - X @ w
         w[:] = prox_MCP(w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(MCP(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(MCP(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -320,7 +320,7 @@ def fista_MCP(X, y, alpha, prox=prox_MCP, max_iter=1_000, f_store=1,
 
         if t % f_store == 0:
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
-                2. + alpha * np.sum(MCP(w))
+                2. + np.sum(MCP(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
