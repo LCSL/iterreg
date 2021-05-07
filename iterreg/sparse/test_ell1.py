@@ -3,9 +3,10 @@ import numpy as np
 from numpy.linalg import norm
 from numpy.testing import assert_allclose, assert_array_less
 from celer.datasets import make_correlated_data
+from celer import Lasso
 
 from iterreg import SparseIterReg
-from iterreg.sparse.solvers import dual_primal
+from iterreg.sparse.solvers import dual_primal, cd_tikhonov_sparse
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
@@ -28,3 +29,13 @@ def test_BP():
     clf = SparseIterReg(verbose=True, f_test=1, memory=30).fit(X, y)
     np.testing.assert_equal(np.argmin(clf.mses),
                             len(clf.mses) - clf.memory - 1)
+
+
+def test_cd():
+    np.random.seed(0)
+    X, y, _ = make_correlated_data(20, 40, random_state=0)
+    alpha = np.max(np.abs(X.T @ y)) / 20
+    w, all_w, E = cd_tikhonov_sparse(X, y, alpha, max_iter=100)
+    clf = Lasso(fit_intercept=False, alpha=alpha/len(y)).fit(X, y)
+
+    np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
