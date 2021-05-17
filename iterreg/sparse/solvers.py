@@ -3,25 +3,24 @@ import numpy as np
 from numba import njit
 from numpy.linalg import norm
 from scipy import sparse
+from scipy.sparse.linalg import svds
 
 from iterreg.utils import shrink, power_method
 from nonconvex.prox_functions import select_penalty, select_prox, prox_MCP, prox_MCP_scalar, MCP, select_prox_sc
 
 
-def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
+def primal_dual(X, y, max_iter=1000, f_store=1, prox=shrink, alpha_prec=None,
                 step=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
     """
     n, d = X.shape
-    if prox is None:
-        prox = shrink
     if alpha_prec is not None:
         assert 0 <= alpha_prec <= 2
         sigma = 1. / np.sum(np.abs(X) ** alpha_prec, axis=1)
         tau = 1. / np.sum(np.abs(X) ** (2 - alpha_prec), axis=0)
     else:
-        L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+        L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
         # stepsizes such that tau * sigma * L ** 2 < 1
         tau = step / L
         sigma = 0.99 / (step * L)
@@ -43,7 +42,7 @@ def primal_dual(X, y, max_iter=1000, f_store=1, prox=None, alpha_prec=None,
     return w, theta, all_w
 
 
-def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
+def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
                 callback=None, memory=10, step=1, rho=0.99, verbose=False,):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal update.
@@ -58,8 +57,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
         Maximum number of Chambolle-Pock iterations.
     f_store : int, optional (default=10)
         Primal iterates `w` are stored every `f_store` iterations.
-    prox : callable or None
-        Proximal operator of the minimized regularizer. If None, a shrink
+    prox : callable, optional (default=shrink)
+        Proximal operator of the minimized regularizer. By default, a shrink
         is used, corresponding to the convex L1 regularizer.
         It is given `(w, tau)` as input (the primal iterate and the primal
         stepsize).
@@ -90,12 +89,9 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
         `ret_all` is True.
     """
     n, d = X.shape
-    L = power_method(X) if sparse.issparse(X) else norm(X, ord=2)
+    L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
 
     crits = np.zeros(max_iter // f_store)
-
-    if prox is None:
-        prox = shrink
 
     if callback is not None:
         best_crit = np.inf
@@ -144,9 +140,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=None, ret_all=True,
 
 
 @njit
-def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
-    if prox is None:
-        prox = shrink
+def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
     n, d = X.shape
     taus = 1. / (2. * (X ** 2).sum(axis=0))
     res = - y  # residuals: Ax - b
@@ -173,10 +167,12 @@ def cd_primal_dual(X, y, prox=None, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, penalty, max_iter=1_000, f_store=1,
-                       verbose=False):
+def cd_tikhonov(X, y, alpha, penalty, max_iter=1_000, f_store=1,
+                verbose=False):
     p = X.shape[1]
     lc = np.zeros(p)
+    if not np.isfortran(X):
+        X = np.asfortranarray(X)
     for j in range(p):
         lc[j] = norm(X[:, j]) ** 2
     R = y.copy().astype(np.float64)
@@ -187,11 +183,13 @@ def cd_tikhonov_sparse(X, y, alpha, penalty, max_iter=1_000, f_store=1,
     for t in range(max_iter):
         for j in range(p):
             old = w[j]
-            w[j] = select_prox_sc(penalty, old + np.ascontiguousarray(X[:, j]).dot(R) / lc[j], alpha / lc[j], lc[j])
+            w[j] = select_prox_sc(
+                penalty, old + (X[:, j]).dot(R) / lc[j], alpha / lc[j], lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(select_penalty(penalty, w, alpha))
+            E[t // f_store] = (R ** 2).sum() / 2. + \
+                np.sum(select_penalty(penalty, w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -200,8 +198,8 @@ def cd_tikhonov_sparse(X, y, alpha, penalty, max_iter=1_000, f_store=1,
 
 
 @njit
-def ista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
-               verbose=False):
+def ista_tikhonov(X, y, alpha, penalty, max_iter=1_000, f_store=1,
+                  verbose=False):
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -224,8 +222,8 @@ def ista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
 
 
 @njit
-def fista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
-                verbose=False):
+def fista_tikhonov(X, y, alpha, penalty, max_iter=1_000, f_store=1,
+                   verbose=False):
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
