@@ -5,18 +5,18 @@
 
 Computation times
 =================
-**02:11.487** total execution time for **auto_examples** files:
+**02:16.808** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_cv_vs_cp_path.py` (``plot_cv_vs_cp_path.py``)           | 01:06.793 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_cv_vs_cp_path.py` (``plot_cv_vs_cp_path.py``)           | 01:05.366 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_stepsize_influence.py` (``plot_stepsize_influence.py``) | 00:33.905 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_stepsize_influence.py` (``plot_stepsize_influence.py``) | 00:36.094 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_existence_stopping.py` (``plot_existence_stopping.py``) | 00:18.398 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_existence_stopping.py` (``plot_existence_stopping.py``) | 00:21.949 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_stopping_lowrank.py` (``plot_stopping_lowrank.py``)     | 00:07.291 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_stopping_lowrank.py` (``plot_stopping_lowrank.py``)     | 00:07.748 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_rate_bregman.py` (``plot_rate_bregman.py``)             | 00:03.396 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_rate_bregman.py` (``plot_rate_bregman.py``)             | 00:03.730 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_datadriven_sigma.py` (``plot_datadriven_sigma.py``)     | 00:01.704 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_datadriven_sigma.py` (``plot_datadriven_sigma.py``)     | 00:01.921 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
