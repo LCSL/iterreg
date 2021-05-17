@@ -166,9 +166,13 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd_tikhonov_sparse(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-                       f_store=1, verbose=False):
+def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
+       f_store=1, verbose=False):
+    """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
+    # TODO find a way to do it supported in numba
+    # if not np.isfortran(X):
+    #     X = np.asfortranarray(X)
     lc = np.zeros(p)
     for j in range(p):
         lc[j] = norm(X[:, j]) ** 2
@@ -192,9 +196,11 @@ def cd_tikhonov_sparse(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
     return w, all_w, E
 
 
-@njit
-def ista_lasso(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-               verbose=False):
+# a priori jitting does not improve anything here
+# @njit
+def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
+         verbose=False):
+    """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)
@@ -214,9 +220,11 @@ def ista_lasso(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
     return w, all_w, E
 
 
-@njit
-def fista_lasso(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-                verbose=False):
+# a priori jitting does not improve anything here
+# @njit
+def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
+          verbose=False):
+    """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
     w = np.zeros(p)

@@ -6,7 +6,7 @@ from celer.datasets import make_correlated_data
 from celer import Lasso
 
 from iterreg import SparseIterReg
-from iterreg.sparse.solvers import dual_primal, cd_tikhonov_sparse
+from iterreg.sparse.solvers import dual_primal, cd, ista, fista
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
@@ -31,11 +31,17 @@ def test_BP():
                             len(clf.mses) - clf.memory - 1)
 
 
-def test_cd():
+def test_cd_ista_fista():
     np.random.seed(0)
     X, y, _ = make_correlated_data(20, 40, random_state=0)
-    alpha = np.max(np.abs(X.T @ y)) / 20
-    w, all_w, E = cd_tikhonov_sparse(X, y, alpha, max_iter=100)
+    alpha = np.max(np.abs(X.T @ y)) / 5
+    w, _, _ = cd(X, y, alpha, max_iter=100)
     clf = Lasso(fit_intercept=False, alpha=alpha/len(y)).fit(X, y)
 
+    np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
+
+    w, _, _ = ista(X, y, alpha, max_iter=1_000)
+    np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
+
+    w, _, _ = fista(X, y, alpha, max_iter=1_000)
     np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
