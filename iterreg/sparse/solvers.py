@@ -187,7 +187,7 @@ def cd_tikhonov_sparse(X, y, alpha, penalty, max_iter=1_000, f_store=1,
     for t in range(max_iter):
         for j in range(p):
             old = w[j]
-            w[j] = select_prox_sc(penalty, old + X[:, j].dot(R) / lc[j], alpha / lc[j], lc[j])
+            w[j] = select_prox_sc(penalty, old + np.ascontiguousarray(X[:, j]).dot(R) / lc[j], alpha / lc[j], lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
@@ -214,7 +214,8 @@ def ista(X, y, alpha, penalty, max_iter=1_000, f_store=1,
         w[:] = select_prox(penalty, w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
             # TODO this is the Lasso energy, not adapted to other prox
-            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(select_penalty(penalty, w, alpha))
+            E[t // f_store] = (R ** 2).sum() / \
+                2. + np.sum(select_penalty(penalty, w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -266,7 +267,7 @@ def cd_tikhonov_sparse_MCP(X, y, alpha, prox=prox_MCP, max_iter=1_000,
         for j in range(p):
             old = w[j]
             w[j] = prox_MCP_scalar(
-                    old + X[:, j].dot(R) / lc[j], alpha / lc[j], lc[j])
+                    old + np.dot(X[:, j], R) / lc[j], alpha / lc[j], lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
