@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from scipy import sparse
 from scipy.sparse.linalg import svds
 
-from iterreg.utils import shrink, ell1
+from iterreg.utils import shrink
 
 
 def primal_dual(X, y, max_iter=1000, f_store=1, prox=shrink, alpha_prec=None,
@@ -166,7 +166,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
 
 
 @njit
-def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
+def cd(X, y, alpha, prox, pen, max_iter=1_000,
        f_store=1, verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
@@ -196,7 +196,7 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
 
 # a priori jitting does not improve anything here
 # @njit
-def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
+def ista(X, y, alpha, prox, pen, max_iter=1_000, f_store=1,
          verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
@@ -220,7 +220,7 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
 # a priori jitting does not improve anything here
 # @njit
-def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
+def fista(X, y, alpha, prox, pen, max_iter=1_000, f_store=1,
           verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
