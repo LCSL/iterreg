@@ -208,7 +208,7 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         R[:] = y - X @ w
-        w[:] = prox(w + X.T @ R / L, alpha / L)
+        w[:] = prox(w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
             E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
             all_w[t // f_store] = w
@@ -233,7 +233,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         w_old = w.copy()
-        w[:] = prox(z - X.T @ (X @ z - y) / L, alpha / L)
+        w[:] = prox(z - X.T @ (X @ z - y) / L, alpha / L, L)
         t_old = t_new
         t_new = (1. + np.sqrt(1 + 4 * t_old ** 2)) / 2.
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
