@@ -24,7 +24,7 @@ def plot_legend_apart(ax, figname, ncol=None):
 
 
 @njit
-def shrink(u, tau):
+def shrink(u, tau, factor = 1.):
     """Soft-thresholding of vector u at level tau > 0."""
     return np.sign(u) * np.maximum(0., np.abs(u) - tau)
 
