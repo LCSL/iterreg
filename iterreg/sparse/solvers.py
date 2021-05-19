@@ -186,7 +186,7 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -210,7 +210,7 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
         R[:] = y - X @ w
         w[:] = prox(w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -240,7 +240,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
         if t % f_store == 0:
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
-                2. + alpha * np.sum(pen(w))
+                2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])

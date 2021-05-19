@@ -30,9 +30,9 @@ def shrink(u, tau, factor=1.):
 
 
 @njit
-def ell1(w):
+def ell1(w, alpha=1.):
     "L1 penalty applied pointwise to vector w."
-    return np.abs(w)
+    return np.abs(w) * alpha
 
 
 def bregman_div(x, y, subgrad=None):
