@@ -24,15 +24,15 @@ def plot_legend_apart(ax, figname, ncol=None):
 
 
 @njit
-def shrink(u, tau):
+def shrink(u, tau, factor=1.):
     """Soft-thresholding of vector u at level tau > 0."""
     return np.sign(u) * np.maximum(0., np.abs(u) - tau)
 
 
 @njit
-def ell1(w):
+def ell1(w, alpha=1.):
     "L1 penalty applied pointwise to vector w."
-    return np.abs(w)
+    return np.abs(w) * alpha
 
 
 def bregman_div(x, y, subgrad=None):

@@ -170,9 +170,7 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
        f_store=1, verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
-    # TODO find a way to do it supported in numba
-    # if not np.isfortran(X):
-    #     X = np.asfortranarray(X)
+    X = np.asfortranarray(X)
     lc = np.zeros(p)
     for j in range(p):
         lc[j] = norm(X[:, j]) ** 2
@@ -184,11 +182,11 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
     for t in range(max_iter):
         for j in range(p):
             old = w[j]
-            w[j] = shrink(old + X[:, j].dot(R) / lc[j], alpha / lc[j])
+            w[j] = prox(old + X[:, j].dot(R) / lc[j], alpha / lc[j], lc[j])
             if w[j] != old:
                 R += ((old - w[j])) * X[:, j]
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -210,9 +208,9 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         R[:] = y - X @ w
-        w[:] = shrink(w + X.T @ R / L, alpha / L)
+        w[:] = prox(w + X.T @ R / L, alpha / L, L)
         if t % f_store == 0:
-            E[t // f_store] = (R ** 2).sum() / 2. + alpha * np.sum(pen(w))
+            E[t // f_store] = (R ** 2).sum() / 2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
@@ -235,14 +233,14 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
     for t in range(max_iter):
         w_old = w.copy()
-        w[:] = shrink(z - X.T @ (X @ z - y) / L, alpha / L)
+        w[:] = prox(z - X.T @ (X @ z - y) / L, alpha / L, L)
         t_old = t_new
         t_new = (1. + np.sqrt(1 + 4 * t_old ** 2)) / 2.
         z[:] = w + (t_old - 1.) / t_new * (w - w_old)
 
         if t % f_store == 0:
             E[t // f_store] = ((X @ w - y) ** 2).sum() / \
-                2. + alpha * np.sum(pen(w))
+                2. + np.sum(pen(w, alpha))
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
