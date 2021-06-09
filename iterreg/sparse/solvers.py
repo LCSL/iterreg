@@ -167,7 +167,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=1, verbose=False):
+       f_store=1, verbose=False, w_0=None):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -176,6 +176,8 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
         lc[j] = norm(X[:, j]) ** 2
     R = y.copy().astype(np.float64)
     w = np.zeros(p)
+    if w is not None:
+        w[:] = w_0.copy()
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
 
@@ -197,11 +199,14 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
 # a priori jitting does not improve anything here
 # @njit
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-         verbose=False):
+         verbose=False, w_0=None):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
-    w = np.zeros(p)
+    if w_0 is None:
+        w = np.zeros(p)
+    else:
+        w = w_0
     E = np.zeros(max_iter // f_store)
     R = y.copy().astype(np.float64)
     all_w = np.zeros((max_iter // f_store, p))
@@ -221,11 +226,14 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 # a priori jitting does not improve anything here
 # @njit
 def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-          verbose=False):
+          verbose=False, w_0=None):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
-    w = np.zeros(p)
+    if w_0 is None:
+        w = np.zeros(p)
+    else:
+        w = w_0
     z = np.zeros(p)
     t_new = 1
     E = np.zeros(max_iter // f_store)
