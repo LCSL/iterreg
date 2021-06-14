@@ -238,7 +238,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
         w = np.zeros(p)
     else:
         w = w_init.copy()
-    z = w.copy()
+    z = np.zeros(p)
     t_new = 1
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
