@@ -45,3 +45,16 @@ def test_cd_ista_fista():
 
     w, _, _ = fista(X, y, alpha, max_iter=1_000)
     np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
+
+
+def test_cd_warm_start():
+    X, y, _ = make_correlated_data(30, 50, random_state=12)
+    alpha = np.max(np.abs(X.T @ y)) / 100
+
+    # same to do 20 iter, or 10 iter, and 10 iter again with warm start:
+    for algo in [cd, ista]:
+        w, _, E = algo(X, y, alpha, max_iter=20, f_store=1)
+
+        w, _, E1 = algo(X, y, alpha, max_iter=10, f_store=1)
+        w, _, E2 = algo(X, y, alpha, w_init=w, max_iter=10, f_store=1)
+        np.testing.assert_allclose(E, np.hstack([E1, E2]))

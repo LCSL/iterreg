@@ -8,7 +8,7 @@ from scipy.sparse.linalg import svds
 from iterreg.utils import shrink, ell1
 
 
-def primal_dual(X, y, max_iter=1000, f_store=1, prox=shrink, alpha_prec=None,
+def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
                 step=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
@@ -139,7 +139,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
 
 
 @njit
-def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
+def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
     n, d = X.shape
     taus = 1. / (2. * (X ** 2).sum(axis=0))
     res = - y  # residuals: Ax - b
@@ -167,15 +167,19 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=1, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=1, verbose=False):
+       f_store=10, w_init=None, verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
     lc = np.zeros(p)
     for j in range(p):
         lc[j] = norm(X[:, j]) ** 2
-    R = y.copy().astype(np.float64)
-    w = np.zeros(p)
+    if w_init is None:
+        w = np.zeros(p)
+        R = y.copy().astype(np.float64)
+    else:
+        w = w_init.copy()
+        R = y - X @ w
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
 
@@ -196,14 +200,19 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
 
 # a priori jitting does not improve anything here
 # @njit
-def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-         verbose=False):
+def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
+         w_init=None, verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
-    w = np.zeros(p)
+    if w_init is None:
+        w = np.zeros(p)
+        R = y.copy().astype(np.float64)
+    else:
+        w = w_init.copy()
+        R = y - X @ w
     E = np.zeros(max_iter // f_store)
-    R = y.copy().astype(np.float64)
+
     all_w = np.zeros((max_iter // f_store, p))
 
     for t in range(max_iter):
@@ -220,12 +229,15 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
 
 # a priori jitting does not improve anything here
 # @njit
-def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-          verbose=False):
+def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
+          w_init=None, verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
-    w = np.zeros(p)
+    if w_init is None:
+        w = np.zeros(p)
+    else:
+        w = w_init.copy()
     z = np.zeros(p)
     t_new = 1
     E = np.zeros(max_iter // f_store)
