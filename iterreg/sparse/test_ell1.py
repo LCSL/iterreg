@@ -51,7 +51,7 @@ def test_cd_warm_start():
     X, y, _ = make_correlated_data(30, 50, random_state=12)
     alpha = np.max(np.abs(X.T @ y)) / 100
 
-    # it should be the same to do 20 iter, of 10 iter, and 10 iter again with warm start:
+    # same to do 20 iter, or 10 iter, and 10 iter again with warm start:
     w, _, E = cd(X, y, alpha, max_iter=20, f_store=1)
 
     w, _, E1 = cd(X, y, alpha, max_iter=10, f_store=1)
