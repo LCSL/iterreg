@@ -57,3 +57,10 @@ def test_cd_warm_start():
     w, _, E1 = cd(X, y, alpha, max_iter=10, f_store=1)
     w, _, E2 = cd(X, y, alpha, w_init=w, max_iter=10, f_store=1)
     np.testing.assert_allclose(E, np.hstack([E1, E2]))
+
+    # same to do 20 iter, or 10 iter, and 10 iter again with warm start:
+    w, _, E = ista(X, y, alpha, max_iter=20, f_store=1)
+
+    w, _, E1 = ista(X, y, alpha, max_iter=10, f_store=1)
+    w, _, E2 = ista(X, y, alpha, w_init=w, max_iter=10, f_store=1)
+    np.testing.assert_allclose(E, np.hstack([E1, E2]))
