@@ -198,8 +198,6 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
     return w, all_w, E
 
 
-# a priori jitting does not improve anything here
-# @njit
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
          w_init=None, verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
@@ -227,8 +225,6 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
     return w, all_w, E
 
 
-# a priori jitting does not improve anything here
-# @njit
 def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
           w_init=None, verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
@@ -236,9 +232,10 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
     L = norm(X, ord=2) ** 2
     if w_init is None:
         w = np.zeros(p)
+        z = np.zeros(p)
     else:
         w = w_init.copy()
-    z = np.zeros(p)
+        z = w.copy()  # need to warm start z more than w !
     t_new = 1
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
