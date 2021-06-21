@@ -290,6 +290,6 @@ def adaptive(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, n_adapt=2,
                     np.array(penalties))
                 if verbose:
                     print(t, E[t // f_store])
-        adapt_coefs = 1 / (w + 1e-15)
+        adapt_coefs = 1 / (np.copy(np.abs(w)) + 1e-15)
 
     return w, E
