@@ -9,7 +9,7 @@ from iterreg.utils import shrink, ell1
 
 
 def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
-                step=1, verbose=False):
+                step_ratio=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
     """
@@ -20,9 +20,9 @@ def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
         tau = 1. / np.sum(np.abs(X) ** (2 - alpha_prec), axis=0)
     else:
         L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
-        # stepsizes such that tau * sigma * L ** 2 < 1
-        tau = step / L
-        sigma = 0.99 / (step * L)
+        # stepsizes such that tau * sigma * L ** 2 = 0.99
+        tau = np.sqrt(0.99 * step_ratio) / L
+        sigma = np.sqrt(0.99 / step_ratio) / L
 
     all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
@@ -42,7 +42,8 @@ def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
 
 
 def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
-                callback=None, memory=10, step=1, rho=0.99, verbose=False,):
+                callback=None, memory=10, step_ratio=1, rho=0.99,
+                verbose=False):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal update.
 
@@ -68,10 +69,11 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
     memory : int, optional (default=10)
         If `callback` is not None and its value did not decrease for the last
         `memory` stored iterates, the algorithm is early stopped.
-    step : float, optional (default=1)
-        Balances primal and dual stepsizes. If `step=1`, both are equal.
+    step_ratio : float, optional (default=1)
+        Ratio betwen primal and dual stepsizes (tau/sigma).
+        If `step_ratio=1`, both stepsizes are equal.
     rho : float, optional (default=0.99)
-        The product of the step sizes is smaller than `rho / norm(X, ord=2)**2`
+        The product of the step sizes is equal to `rho / norm(X, ord=2)**2`
     verbose : bool, optional (default=False)
         Verbosity of the algorithm.
 
@@ -98,8 +100,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
         n_non_decrease = 0
 
     # stepsizes such that tau * sigma * L ** 2 = rho < 1
-    tau = np.sqrt(rho) * step / L
-    sigma = np.sqrt(rho) / (step * L)
+    tau = np.sqrt(rho * step_ratio) / L
+    sigma = np.sqrt(rho / step_ratio) / L
     if ret_all:
         all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
