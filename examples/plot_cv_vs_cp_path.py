@@ -24,13 +24,13 @@ from iterreg.sparse.estimators import SparseIterReg
 dataset = 'rcv1.binary'
 X, y = fetch_libsvm(dataset)
 # make dataset smaller for faster example:
-X = X[:5000]
-y = y[:5000]
+# X = X[:5000]
+# y = y[:5000]
 
 n_splits = 4
 kf = KFold(n_splits=n_splits, shuffle=True, random_state=0)
 
-clf = LassoCV(fit_intercept=False, n_jobs=4, cv=kf, verbose=0)
+clf = LassoCV(fit_intercept=False, n_jobs=4, cv=kf, eps=1e-4, verbose=1)
 
 clf.fit(X, y)
 
