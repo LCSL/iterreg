@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
+from scipy import sparse
 from scipy.linalg import toeplitz
 from numpy.linalg import norm
 from sklearn.utils import check_random_state
@@ -21,6 +22,12 @@ def plot_legend_apart(ax, figname, ncol=None):
     fig.savefig(figname)
     os.system("pdfcrop %s %s" % (figname, figname))
     return fig
+
+
+def datadriven_ratio(X, y):
+    L = sparse.linalg.svds(X, k=1)[1][0]
+    sigma_good = 1. / norm(X.T @ y, ord=np.inf)
+    return 0.99 / (L ** 2 * sigma_good ** 2)
 
 
 @njit
