@@ -25,7 +25,7 @@ n_features = 1_000
 # The function to compute CP, Lasso path and plot metrics:
 
 
-def plot_varying_sigma(corr, density, snr, steps, max_iter=100, rho=0.99):
+def plot_varying_sigma(corr, density, snr, ratios, max_iter=100, rho=0.99):
     np.random.seed(0)
     # true coefficient vector has entries equal to 0 or 1
     supp = np.random.choice(n_features, size=int(density * n_features),
@@ -46,15 +46,16 @@ def plot_varying_sigma(corr, density, snr, steps, max_iter=100, rho=0.99):
     fig.suptitle(r"Correlation=%.1f, $||w^*||_0$= %s, snr=%s" %
                  (corr, (w_true != 0).sum(), snr))
 
-    for i, step in enumerate(steps):
+    for i, ratio in enumerate(ratios):
         _, _, _, all_w = dual_primal(
-            X, y, step=step, rho=rho, ret_all=True, max_iter=max_iter,
+            X, y, step_ratio=ratio, rho=rho, ret_all=True,
+            max_iter=max_iter,
             f_store=1)
         scores = [f1_score(w != 0, w_true != 0) for w in all_w]
         supp_size = np.sum(all_w != 0, axis=1)
         mses = [mean_squared_error(y_test, X_test @ w) for w in all_w]
 
-        axarr[0, 0].plot(scores, label=r"$\sigma=1 /%d ||X||$" % step)
+        axarr[0, 0].plot(scores, label="$\\tau / \\sigma= %d$" % ratio)
         axarr[1, 0].semilogy(supp_size)
         axarr[2, 0].plot(norm(all_w - w_true, axis=1))
         axarr[3, 0].plot(mses)
