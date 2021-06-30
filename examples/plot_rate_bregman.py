@@ -56,13 +56,13 @@ plot_bregman = True
 n_points = 100
 plt.semilogy(f_store * np.arange(n_points),
              bregman[:n_points],
-             label=r'$D_{||\cdot||_1}^{- {A}^* y^\star}(x_k, x^\star)$')
+             label=r'$D_{||\cdot||_1}^{- {X}^* \theta^\star}(w_k, w^\star)$')
 plt.semilogy(f_store * np.arange(n_points),
              norm(all_w_pd - w_bp, axis=1)[:n_points],
-             label=r'$||x_k - x^\star||$')
+             label=r'$||w_k - w^\star||$')
 plt.semilogy(f_store * np.arange(n_points),
              feasability[:n_points],
-             label=r'$||{A} x_k - {b}||$')
+             label=r'$||{X} w_k - {y}||$')
 
 plt.xlabel("Iteration $k$")
 plt.legend(loc='upper right')
