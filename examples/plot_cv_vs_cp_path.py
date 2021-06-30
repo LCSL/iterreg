@@ -34,13 +34,13 @@ clf.fit(X, y)
 
 max_iter = 1_000
 f_store = 5
-step = 1
+step_ratio = 1
 n_points = max_iter // f_store
 mse_dp = np.zeros((n_points, n_splits))
 
 res = Parallel(n_jobs=-1)(delayed(dual_primal)(
-    X[train_idx], y[train_idx], step=step, max_iter=max_iter, f_store=f_store,
-    verbose=False)
+    X[train_idx], y[train_idx], step_ratio=step_ratio, max_iter=max_iter,
+    f_store=f_store, verbose=False)
     for train_idx, _ in kf.split(X))
 all_w = np.array([result[-1] for result in res])
 

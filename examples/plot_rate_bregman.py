@@ -49,20 +49,20 @@ print("Res norm PD %.2e" % norm(X @ w_pd - y))
 print("Res norm BP %.2e" % norm(X @ w_bp - y))
 
 plt.close('all')
-figsize = (10, 3.)
+figsize = (6.85, 1.75)
 fig, ax = plt.subplots(1, 1, constrained_layout=True, figsize=figsize)
 
 plot_bregman = True
 n_points = 100
 plt.semilogy(f_store * np.arange(n_points),
              bregman[:n_points],
-             label=r'$D_{J}^{- \mathbf{X}^\top \theta^\star}(w_k, w^\star)$')
+             label=r'$D_{||\cdot||_1}^{- {A}^* y^\star}(x_k, x^\star)$')
 plt.semilogy(f_store * np.arange(n_points),
              norm(all_w_pd - w_bp, axis=1)[:n_points],
-             label=r'$||w_k - w^\star||$')
+             label=r'$||x_k - x^\star||$')
 plt.semilogy(f_store * np.arange(n_points),
              feasability[:n_points],
-             label=r'$||\mathbf{X} w_k - \mathbf{y}||$')
+             label=r'$||{A} x_k - {b}||$')
 
 plt.xlabel("Iteration $k$")
 plt.legend(loc='upper right')

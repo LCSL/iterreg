@@ -71,7 +71,7 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
         `memory` stored iterates, the algorithm is early stopped.
     step_ratio : float, optional (default=1)
         Ratio betwen primal and dual stepsizes (tau/sigma).
-        If `step=1`, both stepsizes are equal.
+        If `step_ratio=1`, both stepsizes are equal.
     rho : float, optional (default=0.99)
         The product of the step sizes is equal to `rho / norm(X, ord=2)**2`
     verbose : bool, optional (default=False)

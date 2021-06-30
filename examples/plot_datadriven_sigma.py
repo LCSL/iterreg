@@ -51,18 +51,19 @@ fig, axarr = plt.subplots(2, 1, sharex=True, constrained_layout=True,
 
 L = norm(X, ord=2)
 sigma_good = 1. / norm(X.T @ y, ord=np.inf)
-step_good = 0.99 / (L ** 2 * sigma_good ** 2)
+ratio_good = 0.99 / (L ** 2 * sigma_good ** 2)
 
-steps = [1, 100, step_good, 10000]
-labels = [r"$\sigma=\tau$", f"$\\sigma = \\tau / {steps[1]}$", "data-driven $\sigma$",
-          f"$\\sigma = \\tau / {steps[3]}$", ]
+ratios = [1, 100, ratio_good, 10000]
+labels = [r"$\sigma=\tau$", f"$\\sigma = \\tau / {ratios[1]}$",
+          "data-driven $\\sigma$",
+          f"$\\sigma = \\tau / {ratios[3]}$", ]
 all_w = dict()
 
-for step, label in zip(steps, labels):
-    all_w[step] = dual_primal(
-        X, y, ret_all=True, max_iter=60, step_ratio=step, f_store=1)[-1]
-    f1_scores = [f1_score(w != 0, w_true != 0) for w in all_w[step]]
-    supp_size = np.sum(all_w[step] != 0, axis=1)
+for ratio, label in zip(ratios, labels):
+    all_w[ratio] = dual_primal(
+        X, y, ret_all=True, max_iter=60, step_ratio=ratio, f_store=1)[-1]
+    f1_scores = [f1_score(w != 0, w_true != 0) for w in all_w[ratio]]
+    supp_size = np.sum(all_w[ratio] != 0, axis=1)
     axarr[0].plot(f1_scores, label=label)
     axarr[1].plot(supp_size)
 

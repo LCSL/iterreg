@@ -9,7 +9,7 @@ from iterreg.utils import shrink
 
 class SparseIterReg(LinearModel):
     def __init__(self, train_ratio=0.8, f_test=1, max_iter=1000, memory=20,
-                 prox=shrink, step=1, verbose=False):
+                 prox=shrink, step_ratio=1, verbose=False):
         """
         Sparse Recovery with iterative regularization. Chambolle Pock
         iterations are performed on min J(w) s.t. Xw = y as long as the test
@@ -30,8 +30,8 @@ class SparseIterReg(LinearModel):
         prox: callable
             The proximal operator of the regularizer J at level tau.
             By default, `shrink` is used, corresponding to L1.
-        step : float, optional (default=1)
-            Trade-off between primal and dual stepsizes of the algorithm.
+        step_ratio : float, optional (default=1)
+            Ratio between primal and dual stepsizes of the algorithm.
             A higher `step` may slow down convergence, but improve the sparsity
             of the best iterate.
         verbose: bool, optional (default=False)
@@ -42,7 +42,7 @@ class SparseIterReg(LinearModel):
         self.verbose = verbose
         self.max_iter = max_iter
         self.memory = memory
-        self.step = step
+        self.step_ratio = step_ratio
         self.prox = prox
 
     def fit(self, X, y, train_idx=None, test_idx=None):
@@ -57,9 +57,9 @@ class SparseIterReg(LinearModel):
             return mean_squared_error(y_test, X_test @ w)
 
         w, thetas, mses = dual_primal(
-            X_train, y_train, step=self.step, max_iter=self.max_iter,
-            f_store=self.f_test, callback=callback, prox=self.prox,
-            memory=self.memory,
+            X_train, y_train, step_ratio=self.step_ratio,
+            max_iter=self.max_iter, f_store=self.f_test, callback=callback,
+            prox=self.prox, memory=self.memory,
             ret_all=False, verbose=self.verbose)
 
         self.coef_ = w
