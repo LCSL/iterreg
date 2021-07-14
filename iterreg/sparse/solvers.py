@@ -196,10 +196,8 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
                 print(t, E[t // f_store])
 
             if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
-                            np.maximum(tol, 1e-10) * E[0]):
-                E[(t // f_store):] = E[t // f_store]
-                all_w[(t // f_store):] = w
-                return w, all_w, E
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
@@ -228,10 +226,8 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
                 print(t, E[t // f_store])
 
             if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
-                            np.maximum(tol, 1e-10) * E[0]):
-                E[(t // f_store):] = E[t // f_store]
-                all_w[(t // f_store):] = w
-                return w, all_w, E
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
@@ -266,47 +262,6 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
                 print(t, E[t // f_store])
 
             if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
-                            np.maximum(tol, 1e-10) * E[0]):
-                E[(t // f_store):] = E[t // f_store]
-                all_w[(t // f_store):] = w
-                return w, all_w, E
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
-
-
-@njit
-def adaptive(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, n_adapt=2,
-             f_store=10, w_init=None, verbose=False):
-    """Coordinate descent for the Tikhonov problem."""
-    p = X.shape[1]
-    X = np.asfortranarray(X)
-    lc = np.zeros(p)
-    for j in range(p):
-        lc[j] = norm(X[:, j]) ** 2
-
-    E = np.zeros(max_iter * n_adapt // f_store)
-    adapt_coefs = np.ones(p)
-
-    if w_init is None:
-        w = np.zeros(p)
-        R = y.copy().astype(np.float64)
-    else:
-        w = w_init.copy()
-        R = y - X @ w
-
-    for k in range(n_adapt):
-        for t in range(max_iter):
-            for j in range(p):
-                old = w[j]
-                w[j] = prox(old + X[:, j].dot(R) / lc[j],
-                            alpha*adapt_coefs[j] / lc[j], lc[j])
-                if w[j] != old:
-                    R += ((old - w[j])) * X[:, j]
-            if t % f_store == 0:
-                penalties = [pen(w[j], alpha*adapt_coefs[j]) for j in range(p)]
-                E[t // f_store] = (R ** 2).sum() / 2. + np.sum(
-                    np.array(penalties))
-                if verbose:
-                    print(t, E[t // f_store])
-        adapt_coefs = 1 / (np.copy(np.abs(w)) + 1e-15)
-
-    return w, E
