@@ -167,7 +167,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=10, w_init=None, ES=False, verbose=False):
+       f_store=10, w_init=None, tol=0., verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -194,16 +194,17 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
-            if ES and (t > 0):
-                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
-                    E[(t // f_store):] = E[t // f_store]
-                    all_w[(t // f_store):] = w
-                    return w, all_w, E
+
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            np.maximum(tol, 1e-10) * E[0]):
+                E[(t // f_store):] = E[t // f_store]
+                all_w[(t // f_store):] = w
+                return w, all_w, E
     return w, all_w, E
 
 
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-         w_init=None, ES=False, verbose=False):
+         w_init=None, tol=0., verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -226,17 +227,16 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             if verbose:
                 print(t, E[t // f_store])
 
-            if ES & (t > 0):
-                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
-                    E[t // f_store:] = E[t // f_store]
-                    all_w[(t // f_store):] = w
-                    return w, all_w, E
-
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            np.maximum(tol, 1e-10) * E[0]):
+                E[(t // f_store):] = E[t // f_store]
+                all_w[(t // f_store):] = w
+                return w, all_w, E
     return w, all_w, E
 
 
-def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
-          w_init=None, ES=False, verbose=False):
+def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
+          w_init=None, tol=0., verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -265,12 +265,11 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
             if verbose:
                 print(t, E[t // f_store])
 
-            if ES & (t > 0):
-                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
-                    E[t // f_store:] = E[t // f_store]
-                    all_w[(t // f_store):] = w
-                    return w, all_w, E
-
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            np.maximum(tol, 1e-10) * E[0]):
+                E[(t // f_store):] = E[t // f_store]
+                all_w[(t // f_store):] = w
+                return w, all_w, E
     return w, all_w, E
 
 
