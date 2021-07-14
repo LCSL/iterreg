@@ -167,7 +167,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=10, w_init=None, verbose=False):
+       f_store=10, w_init=None, ES=False, verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -194,12 +194,16 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
-
+            if ES and (t > 0):
+                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
+                    E[(t // f_store):] = E[t // f_store]
+                    all_w[(t // f_store):] = w
+                    return w, all_w, E
     return w, all_w, E
 
 
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-         w_init=None, verbose=False):
+         w_init=None, ES=False, verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -222,11 +226,17 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             if verbose:
                 print(t, E[t // f_store])
 
+            if ES & (t > 0):
+                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
+                    E[t // f_store:] = E[t // f_store]
+                    all_w[(t // f_store):] = w
+                    return w, all_w, E
+
     return w, all_w, E
 
 
-def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-          w_init=None, verbose=False):
+def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=1,
+          w_init=None, ES=False, verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -237,6 +247,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
         w = w_init.copy()
         z = w.copy()  # need to warm start z more than w !
     t_new = 1
+
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
 
@@ -253,6 +264,13 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
+
+            if ES & (t > 0):
+                if np.abs(E[t // f_store - 1]-E[t // f_store]) < 1e-10 * E[0]:
+                    E[t // f_store:] = E[t // f_store]
+                    all_w[(t // f_store):] = w
+                    return w, all_w, E
+
     return w, all_w, E
 
 
