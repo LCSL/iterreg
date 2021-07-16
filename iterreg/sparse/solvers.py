@@ -169,7 +169,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=10, w_init=None, verbose=False):
+       f_store=10, w_init=None, tol=0., verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -197,11 +197,14 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
             if verbose:
                 print(t, E[t // f_store])
 
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-         w_init=None, verbose=False):
+         w_init=None, tol=0., verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -224,11 +227,14 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             if verbose:
                 print(t, E[t // f_store])
 
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
 def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-          w_init=None, verbose=False):
+          w_init=None, tol=0., verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -239,6 +245,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
         w = w_init.copy()
         z = w.copy()  # need to warm start z more than w !
     t_new = 1
+
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
 
@@ -255,4 +262,8 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
+
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
