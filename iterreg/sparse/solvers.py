@@ -259,7 +259,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
 @njit
 def adaptive(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, n_adapt=2,
              f_store=10, w_init=None, verbose=False):
-    """Coordinate descent for the Tikhonov problem."""
+    """Adaptive for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
     lc = np.zeros(p)
