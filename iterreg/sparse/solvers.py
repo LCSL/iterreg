@@ -268,9 +268,9 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
 
 
 @njit
-def adaptive(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
+def reweighted(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
              f_store=10, w_init=None, tol=0., verbose=False):
-    """Adaptive for the Tikhonov problem."""
+    """Reweighted for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
     lc = np.zeros(p)
