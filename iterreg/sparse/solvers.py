@@ -9,7 +9,7 @@ from iterreg.utils import shrink, ell1
 
 
 def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
-                step=1, verbose=False):
+                step_ratio=1, verbose=False):
     """
     Chambolle-Pock algorithm to minimize J(w) subject to Xw = y.
     """
@@ -20,9 +20,9 @@ def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
         tau = 1. / np.sum(np.abs(X) ** (2 - alpha_prec), axis=0)
     else:
         L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
-        # stepsizes such that tau * sigma * L ** 2 < 1
-        tau = step / L
-        sigma = 0.99 / (step * L)
+        # stepsizes such that tau * sigma * L ** 2 = 0.99
+        tau = np.sqrt(0.99 * step_ratio) / L
+        sigma = np.sqrt(0.99 / step_ratio) / L
 
     all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
@@ -42,10 +42,10 @@ def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
 
 
 def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
-                callback=None, memory=10, step=1, rho=0.99, verbose=False,):
+                callback=None, memory=10, step_ratio=1, rho=0.99,
+                verbose=False):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal update.
-
     Parameters
     ----------
     X : np.array, shape (n_samples, n_features)
@@ -68,13 +68,13 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
     memory : int, optional (default=10)
         If `callback` is not None and its value did not decrease for the last
         `memory` stored iterates, the algorithm is early stopped.
-    step : float, optional (default=1)
-        Balances primal and dual stepsizes. If `step=1`, both are equal.
+    step_ratio : float, optional (default=1)
+        Ratio betwen primal and dual stepsizes (tau/sigma).
+        If `step_ratio=1`, both stepsizes are equal.
     rho : float, optional (default=0.99)
-        The product of the step sizes is smaller than `rho / norm(X, ord=2)**2`
+        The product of the step sizes is equal to `rho / norm(X, ord=2)**2`
     verbose : bool, optional (default=False)
         Verbosity of the algorithm.
-
     Returns
     -------
     w : np.array, shape (n_features,)
@@ -98,8 +98,8 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
         n_non_decrease = 0
 
     # stepsizes such that tau * sigma * L ** 2 = rho < 1
-    tau = np.sqrt(rho) * step / L
-    sigma = np.sqrt(rho) / (step * L)
+    tau = np.sqrt(rho * step_ratio) / L
+    sigma = np.sqrt(rho / step_ratio) / L
     if ret_all:
         all_w = np.zeros([max_iter // f_store, d])
     w = np.zeros(d)
@@ -167,7 +167,7 @@ def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
 
 @njit
 def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
-       f_store=10, w_init=None, verbose=False):
+       f_store=10, w_init=None, tol=0., verbose=False):
     """Coordinate descent for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -195,11 +195,14 @@ def cd(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000,
             if verbose:
                 print(t, E[t // f_store])
 
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
 def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-         w_init=None, verbose=False):
+         w_init=None, tol=0., verbose=False):
     """Proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -222,11 +225,14 @@ def ista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             if verbose:
                 print(t, E[t // f_store])
 
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
 def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
-          w_init=None, verbose=False):
+          w_init=None, tol=0., verbose=False):
     """Accelerated proximal gradient descent for the Tikhonov problem."""
     p = X.shape[1]
     L = norm(X, ord=2) ** 2
@@ -237,6 +243,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
         w = w_init.copy()
         z = w.copy()  # need to warm start z more than w !
     t_new = 1
+
     E = np.zeros(max_iter // f_store)
     all_w = np.zeros((max_iter // f_store, p))
 
@@ -253,12 +260,16 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
             all_w[t // f_store] = w
             if verbose:
                 print(t, E[t // f_store])
+
+            if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                            tol * E[0]):
+                return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
 
 
 @njit
-def adaptive(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, n_adapt=2,
-             f_store=10, w_init=None, verbose=False):
+def adaptive(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
+             f_store=10, w_init=None, tol=0., verbose=False):
     """Adaptive for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
@@ -266,30 +277,32 @@ def adaptive(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, n_adapt=2,
     for j in range(p):
         lc[j] = norm(X[:, j]) ** 2
 
-    E = np.zeros(max_iter * n_adapt // f_store)
+    E = np.zeros(max_iter // f_store)
     adapt_coefs = np.ones(p)
 
     if w_init is None:
         w = np.zeros(p)
-        R = y.copy().astype(np.float64)
+        R = y.copy()
     else:
         w = w_init.copy()
         R = y - X @ w
 
-    for k in range(n_adapt):
+    for _ in range(n_adapt):
         for t in range(max_iter):
             for j in range(p):
                 old = w[j]
-                w[j] = prox(old + X[:, j].dot(R) / lc[j],
-                            alpha*adapt_coefs[j] / lc[j], lc[j])
+                w[j] = shrink(old + X[:, j].dot(R) / lc[j],
+                              alpha*adapt_coefs[j] / lc[j])
                 if w[j] != old:
                     R += ((old - w[j])) * X[:, j]
             if t % f_store == 0:
-                penalties = [pen(w[j], alpha*adapt_coefs[j]) for j in range(p)]
                 E[t // f_store] = (R ** 2).sum() / 2. + np.sum(
-                    np.array(penalties))
+                    np.abs(w)*adapt_coefs)
                 if verbose:
                     print(t, E[t // f_store])
-        adapt_coefs = 1 / (np.copy(np.abs(w)) + 1e-15)
+                if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                                tol * E[0]):
+                    break
+        adapt_coefs = deriv(np.abs(w))
 
     return w, E
