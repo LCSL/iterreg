@@ -35,6 +35,12 @@ def ell1(w, alpha=1.):
     return np.abs(w) * alpha
 
 
+@njit
+def deriv_ell1(w, alpha=1.):
+    "L1 penalty derivative applied pointwise to vector w > 0."
+    return np.ones_like(w) * alpha
+
+
 def bregman_div(x, y, subgrad=None):
     """Bregman divergence for L1."""
     if subgrad is None:

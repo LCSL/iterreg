@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from scipy import sparse
 from scipy.sparse.linalg import svds
 
-from iterreg.utils import shrink, ell1
+from iterreg.utils import shrink, ell1, deriv_ell1
 
 
 def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
@@ -268,7 +268,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
 
 
 @njit
-def reweighted(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
+def reweighted(X, y, alpha, deriv=deriv_ell1, max_iter=1_000, n_adapt=5,
                f_store=10, w_init=None, tol=0., verbose=False):
     """Reweighted L1 solver for the Tikhonov problem."""
     p = X.shape[1]
