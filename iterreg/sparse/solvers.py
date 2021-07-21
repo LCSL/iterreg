@@ -270,7 +270,7 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
 @njit
 def reweighted(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
                f_store=10, w_init=None, tol=0., verbose=False):
-    """Reweighted for the Tikhonov problem."""
+    """Reweighted L1 solver for the Tikhonov problem."""
     p = X.shape[1]
     X = np.asfortranarray(X)
     lc = np.zeros(p)
@@ -291,13 +291,13 @@ def reweighted(X, y, alpha, deriv, max_iter=1_000, n_adapt=5,
         for t in range(max_iter):
             for j in range(p):
                 old = w[j]
-                w[j] = shrink(old + X[:, j].dot(R) / lc[j],
+                w[j] = shrink(old + X[:, j] @ R / lc[j],
                               alpha*adapt_coefs[j] / lc[j])
                 if w[j] != old:
                     R += ((old - w[j])) * X[:, j]
             if t % f_store == 0:
-                E[t // f_store] = (R ** 2).sum() / 2. + np.sum(
-                    np.abs(w)*adapt_coefs)
+                E[t // f_store] = (R ** 2).sum() / 2. + norm(
+                    w * adapt_coefs, ord=1)
                 if verbose:
                     print(t, E[t // f_store])
                 if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
