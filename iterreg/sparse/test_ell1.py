@@ -7,7 +7,7 @@ from celer import Lasso
 
 from iterreg import SparseIterReg
 from iterreg.sparse.solvers import dual_primal, cd, ista, fista, reweighted
-from nonconvex.prox_functions import deriv_MCP
+from iterreg.utils import deriv_MCP
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
