@@ -296,8 +296,9 @@ def reweighted(X, y, alpha, deriv=deriv_ell1, max_iter=1_000, n_adapt=5,
                 if w[j] != old:
                     R += ((old - w[j])) * X[:, j]
             if t % f_store == 0:
+                supp = (w != 0)
                 E[t // f_store] = (R ** 2).sum() / 2. + norm(
-                    w * adapt_coefs, ord=1)
+                    w[supp] * adapt_coefs[supp], ord=1)
                 if verbose:
                     print(t, E[t // f_store])
                 if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <

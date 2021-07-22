@@ -7,6 +7,7 @@ from celer import Lasso
 
 from iterreg import SparseIterReg
 from iterreg.sparse.solvers import dual_primal, cd, ista, fista, reweighted
+from nonconvex.prox_functions import deriv_MCP
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
@@ -67,5 +68,9 @@ def test_rw_cvg():
     clf = Lasso(fit_intercept=False, alpha=alpha/len(y)).fit(X, y)
 
     np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
+
+    np.testing.assert_allclose(E[-1] / E[0], E[-2] / E[0], atol=5e-4)
+
+    w, E = reweighted(X, y, alpha, deriv_MCP)
 
     np.testing.assert_allclose(E[-1] / E[0], E[-2] / E[0], atol=5e-4)
