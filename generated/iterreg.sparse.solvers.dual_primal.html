@@ -118,51 +118,49 @@
 <dt class="sig sig-object py" id="iterreg.sparse.solvers.dual_primal">
 <span class="sig-prename descclassname"><span class="pre">iterreg.sparse.solvers.</span></span><span class="sig-name descname"><span class="pre">dual_primal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">X</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">max_iter=1000</span></em>, <em class="sig-param"><span class="pre">f_store=10</span></em>, <em class="sig-param"><span class="pre">prox=CPUDispatcher(&lt;function</span> <span class="pre">shrink&gt;)</span></em>, <em class="sig-param"><span class="pre">ret_all=True</span></em>, <em class="sig-param"><span class="pre">callback=None</span></em>, <em class="sig-param"><span class="pre">memory=10</span></em>, <em class="sig-param"><span class="pre">step_ratio=1</span></em>, <em class="sig-param"><span class="pre">rho=0.99</span></em>, <em class="sig-param"><span class="pre">verbose=False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#iterreg.sparse.solvers.dual_primal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Chambolle-Pock algorithm applied to the dual: interpolation on the
-primal update.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">np.array, shape (n_samples, n_features)</span></dt><dd><p>Design matrix.</p>
+primal update.
+Parameters
+———-
+X : np.array, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>Design matrix.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>y<span class="classifier">np.array, shape (n_samples,)</span></dt><dd><p>Observation vector.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">np.array, shape (n_samples,)</span></dt><dd><p>Observation vector.</p>
+<dt>max_iter<span class="classifier">int, optional (default=1000)</span></dt><dd><p>Maximum number of Chambolle-Pock iterations.</p>
 </dd>
-<dt><strong>max_iter</strong><span class="classifier">int, optional (default=1000)</span></dt><dd><p>Maximum number of Chambolle-Pock iterations.</p>
+<dt>f_store<span class="classifier">int, optional (default=10)</span></dt><dd><p>Primal iterates <cite>w</cite> are stored every <cite>f_store</cite> iterations.</p>
 </dd>
-<dt><strong>f_store</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>Primal iterates <cite>w</cite> are stored every <cite>f_store</cite> iterations.</p>
-</dd>
-<dt><strong>prox</strong><span class="classifier">callable, optional (default=shrink)</span></dt><dd><p>Proximal operator of the minimized regularizer. By default, a shrink
+<dt>prox<span class="classifier">callable, optional (default=shrink)</span></dt><dd><p>Proximal operator of the minimized regularizer. By default, a shrink
 is used, corresponding to the convex L1 regularizer.
 It is given <cite>(w, tau)</cite> as input (the primal iterate and the primal
 stepsize).</p>
 </dd>
-<dt><strong>ret_all</strong><span class="classifier">bool, optional (default=True)</span></dt><dd><p>If True, return all stored primal iterates.</p>
+<dt>ret_all<span class="classifier">bool, optional (default=True)</span></dt><dd><p>If True, return all stored primal iterates.</p>
 </dd>
-<dt><strong>callback</strong><span class="classifier">callable or None, optional (default=None)</span></dt><dd><p>Callable called on primal iterate <cite>w</cite> every <cite>f_store</cite> iterations.</p>
+<dt>callback<span class="classifier">callable or None, optional (default=None)</span></dt><dd><p>Callable called on primal iterate <cite>w</cite> every <cite>f_store</cite> iterations.</p>
 </dd>
-<dt><strong>memory</strong><span class="classifier">int, optional (default=10)</span></dt><dd><p>If <cite>callback</cite> is not None and its value did not decrease for the last
+<dt>memory<span class="classifier">int, optional (default=10)</span></dt><dd><p>If <cite>callback</cite> is not None and its value did not decrease for the last
 <cite>memory</cite> stored iterates, the algorithm is early stopped.</p>
 </dd>
-<dt><strong>step_ratio</strong><span class="classifier">float, optional (default=1)</span></dt><dd><p>Ratio betwen primal and dual stepsizes (tau/sigma).
+<dt>step_ratio<span class="classifier">float, optional (default=1)</span></dt><dd><p>Ratio betwen primal and dual stepsizes (tau/sigma).
 If <cite>step_ratio=1</cite>, both stepsizes are equal.</p>
 </dd>
-<dt><strong>rho</strong><span class="classifier">float, optional (default=0.99)</span></dt><dd><p>The product of the step sizes is equal to <cite>rho / norm(X, ord=2)**2</cite></p>
+<dt>rho<span class="classifier">float, optional (default=0.99)</span></dt><dd><p>The product of the step sizes is equal to <cite>rho / norm(X, ord=2)**2</cite></p>
 </dd>
-<dt><strong>verbose</strong><span class="classifier">bool, optional (default=False)</span></dt><dd><p>Verbosity of the algorithm.</p>
+<dt>verbose<span class="classifier">bool, optional (default=False)</span></dt><dd><p>Verbosity of the algorithm.</p>
 </dd>
 </dl>
+<dl class="simple">
+<dt>w<span class="classifier">np.array, shape (n_features,)</span></dt><dd><p>Last or best primal iterate.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>w</strong><span class="classifier">np.array, shape (n_features,)</span></dt><dd><p>Last or best primal iterate.</p>
+<dt>theta<span class="classifier">np.array, shape (n_samples,)</span></dt><dd><p>Last or best dual iterate.</p>
 </dd>
-<dt><strong>theta</strong><span class="classifier">np.array, shape (n_samples,)</span></dt><dd><p>Last or best dual iterate.</p>
+<dt>crits<span class="classifier">np.array, shape (max_iter // f_store,)</span></dt><dd><p>Value of callback along iterations.</p>
 </dd>
-<dt><strong>crits</strong><span class="classifier">np.array, shape (max_iter // f_store,)</span></dt><dd><p>Value of callback along iterations.</p>
-</dd>
-<dt><strong>all_w</strong><span class="classifier">np.array, shape (max_iter // f_store, n_features)</span></dt><dd><p>Primal iterates every <cite>f_store</cite> iterations. Returned only if
+<dt>all_w<span class="classifier">np.array, shape (max_iter // f_store, n_features)</span></dt><dd><p>Primal iterates every <cite>f_store</cite> iterations. Returned only if
 <cite>ret_all</cite> is True.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>
