@@ -42,6 +42,18 @@ def ell1(w, alpha=1.):
     return np.abs(w) * alpha
 
 
+@njit
+def deriv_ell1(w, alpha=1.):
+    "L1 penalty derivative applied pointwise to vector w > 0."
+    return np.ones_like(w) * alpha
+
+
+@njit
+def deriv_MCP(w, alpha=1., g=3):
+    """Derivative of the MCP, w > 0"""
+    return (w < alpha * g) * (alpha - w / g)
+
+
 def bregman_div(x, y, subgrad=None):
     """Bregman divergence for L1."""
     if subgrad is None:

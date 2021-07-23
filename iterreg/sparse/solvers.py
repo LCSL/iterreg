@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from scipy import sparse
 from scipy.sparse.linalg import svds
 
-from iterreg.utils import shrink, ell1
+from iterreg.utils import shrink, ell1, deriv_ell1
 
 
 def primal_dual(X, y, max_iter=1000, f_store=10, prox=shrink, alpha_prec=None,
@@ -46,7 +46,6 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
                 verbose=False):
     """Chambolle-Pock algorithm applied to the dual: interpolation on the
     primal update.
-
     Parameters
     ----------
     X : np.array, shape (n_samples, n_features)
@@ -76,7 +75,6 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
         The product of the step sizes is equal to `rho / norm(X, ord=2)**2`
     verbose : bool, optional (default=False)
         Verbosity of the algorithm.
-
     Returns
     -------
     w : np.array, shape (n_features,)
@@ -267,3 +265,45 @@ def fista(X, y, alpha, prox=shrink, pen=ell1, max_iter=1_000, f_store=10,
                             tol * E[0]):
                 return w, all_w[:t//f_store + 1], E[:t//f_store + 1]
     return w, all_w, E
+
+
+@njit
+def reweighted(X, y, alpha, deriv=deriv_ell1, max_iter=1_000, n_adapt=5,
+               f_store=10, w_init=None, tol=0., verbose=False):
+    """Reweighted L1 solver for the Tikhonov problem."""
+    p = X.shape[1]
+    X = np.asfortranarray(X)
+    lc = np.zeros(p)
+    for j in range(p):
+        lc[j] = norm(X[:, j]) ** 2
+
+    E = np.zeros(max_iter // f_store)
+    adapt_coefs = np.ones(p)
+
+    if w_init is None:
+        w = np.zeros(p)
+        R = y.copy()
+    else:
+        w = w_init.copy()
+        R = y - X @ w
+
+    for _ in range(n_adapt):
+        for t in range(max_iter):
+            for j in range(p):
+                old = w[j]
+                w[j] = shrink(old + X[:, j] @ R / lc[j],
+                              alpha*adapt_coefs[j] / lc[j])
+                if w[j] != old:
+                    R += ((old - w[j])) * X[:, j]
+            if t % f_store == 0:
+                supp = (w != 0)
+                E[t // f_store] = (R ** 2).sum() / 2. + norm(
+                    w[supp] * adapt_coefs[supp], ord=1)
+                if verbose:
+                    print(t, E[t // f_store])
+                if (t > 0) and (np.abs(E[t // f_store - 1]-E[t // f_store]) <
+                                tol * E[0]):
+                    break
+        adapt_coefs = deriv(np.abs(w))
+
+    return w, E

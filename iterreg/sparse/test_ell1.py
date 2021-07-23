@@ -6,7 +6,8 @@ from celer.datasets import make_correlated_data
 from celer import Lasso
 
 from iterreg import SparseIterReg
-from iterreg.sparse.solvers import dual_primal, cd, ista, fista
+from iterreg.sparse.solvers import dual_primal, cd, ista, fista, reweighted
+from iterreg.utils import deriv_MCP
 
 
 @pytest.mark.parametrize("solver", [dual_primal])
@@ -58,3 +59,18 @@ def test_cd_warm_start():
         w, _, E1 = algo(X, y, alpha, max_iter=10, f_store=1)
         w, _, E2 = algo(X, y, alpha, w_init=w, max_iter=10, f_store=1)
         np.testing.assert_allclose(E, np.hstack([E1, E2]))
+
+
+def test_rw_cvg():
+    X, y, _ = make_correlated_data(20, 40, random_state=0)
+    alpha = np.max(np.abs(X.T @ y)) / 5
+    w, E = reweighted(X, y, alpha, max_iter=1000, n_adapt=5)
+    clf = Lasso(fit_intercept=False, alpha=alpha/len(y)).fit(X, y)
+
+    np.testing.assert_allclose(w, clf.coef_, atol=5e-4)
+
+    np.testing.assert_allclose(E[-1] / E[0], E[-2] / E[0], atol=5e-4)
+
+    w, E = reweighted(X, y, alpha, deriv_MCP)
+
+    np.testing.assert_allclose(E[-1] / E[0], E[-2] / E[0], atol=5e-4)
