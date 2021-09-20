@@ -16,20 +16,20 @@ from iterreg.low_rank.solvers import dual_primal_low_rank
 configure_plt()
 
 
-d = 20
+d = 100
 np.random.seed(0)
 mask = np.zeros([d, d], dtype=bool)
 idx = np.random.choice(d ** 2, d ** 2 // 5, replace=False)
 mask.flat[idx] = True
 
-Y_true = np.random.randn(d, 5) @ np.random.randn(5, d)
-Y_true /= (norm(Y_true, ord="fro") / 20)
-Y = Y_true.copy()
+b_true = np.random.randn(d, 5) @ np.random.randn(5, d)
+b_true /= (norm(b_true, ord="fro") / 20)
+b = b_true.copy()
 
-Y[~mask] = 0
+b[~mask] = 0
 
-W_star, Theta, _ = dual_primal_low_rank(
-    mask, Y, max_iter=20000, f_store=100, verbose=0)
+x_star, y, _ = dual_primal_low_rank(
+    mask, b, max_iter=20000, f_store=100, verbose=0)
 
 
 n_deltas = 10
@@ -41,21 +41,22 @@ f_store = 1
 
 for delta in deltas:
     print(delta)
-    Y_delta = Y + delta * noise / norm(noise)
-    w, theta, dist = dual_primal_low_rank(
-        mask, Y_delta, max_iter=1000, verbose=False, f_store=f_store,
-        limit=W_star)
+    b_delta = b_true + delta * noise / norm(noise)
+    x, theta, dist = dual_primal_low_rank(
+        mask, b_delta, max_iter=100, sigma=0.1, verbose=False, f_store=f_store,
+        limit=x_star)
 
     distances[delta] = dist
 
-fig1, ax = plt.subplots(1, 1, constrained_layout=True, figsize=(8, 4))
+fig1, ax = plt.subplots(1, 1, constrained_layout=True, figsize=(6, 4))
 n_points = 500
 for delta in deltas[3:-1]:
     x_plt = f_store * np.arange(len(distances[delta]))
-    y_plt = distances[delta] / norm(W_star)
+    y_plt = distances[delta] / norm(x_star)
     ax.semilogy(x_plt[:n_points], y_plt[:n_points],
                 label=r"$\delta={:.1f}$".format(delta))
-plt.ylabel(r'$||w_k^\delta - w^\star|| / ||w^\star||$')
-plt.xlabel("Iteration $k$")
-plt.legend(loc='upper right', ncol=3, fontsize=16)
+plt.ylabel(r'$||x_k - {x}^\star|| / ||{x}^\star||$')
+plt.xlabel("CP iteration $k$")
+# plt.legend(loc='upper right', ncol=3, fontsize=16)
 plt.show(block=False)
+fig1.savefig("low_rank_stopping_d%d.pdf" % d)

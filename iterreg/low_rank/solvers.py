@@ -5,13 +5,18 @@ from iterreg.utils import shrink
 
 
 def dual_primal_low_rank(
-        mask, Y, max_iter=1000, f_store=10, limit=None, verbose=False):
+        mask, Y, max_iter=1000, f_store=10, sigma=None, limit=None,
+        verbose=False):
     """Lowest nuclear norm matrix equal to Y on mask.
     mask and Y are np.arrays, shape (d, d).
     """
     d = mask.shape[0]
-    sigma = 0.99
-    tau = 1.
+
+    if sigma is None:
+        sigma = 0.99
+        tau = 1.
+    else:
+        tau = 0.99 / sigma
     Theta = np.zeros((d, d))
     Theta_old = Theta.copy()
     distances = np.zeros(max_iter // f_store)
