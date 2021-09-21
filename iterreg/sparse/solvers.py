@@ -138,6 +138,34 @@ def dual_primal(X, y, max_iter=1000, f_store=10, prox=shrink, ret_all=True,
         return w, theta, crits
 
 
+def _precond_dual_primal(
+        X, y, max_iter=1000, f_store=10, verbose=False, sigma=1):
+    """Preconditioned Chambolle-Pock algorithm..
+    """
+    n, d = X.shape
+    # L = svds(X, k=1)[1][0] if sparse.issparse(X) else norm(X, ord=2)
+
+    # coordinatewise stepsizes as per Pock-Chambolle 2011
+    taus = 1 / norm(X, axis=0) ** 2 / (d * sigma)
+    sigmas = sigma
+    all_w = np.zeros([max_iter // f_store, d])
+    w = np.zeros(d)
+    theta = np.zeros(n)
+    theta_old = np.zeros(n)
+
+    for k in range(max_iter):
+        w = shrink(w - taus * (X.T @ (2 * theta - theta_old)),
+                   taus)  # interpolate
+        theta_old[:] = theta
+        theta += sigmas * (X @ w - y)
+        if k % f_store == 0:
+            all_w[k // f_store] = w
+            if verbose:
+                print("Iter %d" % k)
+                print(norm(y - X @ w))
+    return w, theta,  all_w
+
+
 @njit
 def cd_primal_dual(X, y, prox=shrink, max_iter=100, f_store=10, verbose=False):
     n, d = X.shape
