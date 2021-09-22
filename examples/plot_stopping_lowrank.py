@@ -30,7 +30,7 @@ Y = Y_true.copy()
 Y[~mask] = 0
 
 W_star, Theta, _ = dual_primal_low_rank(
-    mask, Y, max_iter=3_000, f_store=10, verbose=1)
+    mask, Y, max_iter=3_000, stop_crit=1e-8, f_store=100, verbose=1)
 
 print(f"Feasability of W_star : {norm((Y - W_star)[mask]):.2e}")
 
@@ -49,8 +49,8 @@ for delta in deltas:
     sigma = 1 / norm(Y_delta, ord=2)
 
     x, theta, dist = dual_primal_low_rank(
-        mask, Y_delta, max_iter=200, sigma=sigma, verbose=False, f_store=f_store,
-        limit=W_star)
+        mask, Y_delta, max_iter=200, sigma=sigma, verbose=False,
+        f_store=f_store, limit=W_star)
 
     distances[delta] = dist
 
@@ -63,7 +63,7 @@ for delta in deltas:
     ax.semilogy(x_plt[:n_points], y_plt[:n_points],
                 label=r"$\delta={:.1f}$".format(delta))
 
-paper = True
+paper = False
 if paper:
     plt.ylabel(r'$||X_k - {X}^\star|| / ||{X}^\star||$')
     plt.xlabel("iterative regularization iteration $k$")
