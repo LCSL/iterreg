@@ -123,7 +123,7 @@ package) and iterative regularization (ours).
     Dataset: rcv1.binary
     Downloading data from https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/rcv1_train.binary.bz2 (13.1 MB)
 
-    file_sizes:   0%|                                   | 0.00/13.7M [00:00<?, ?B/s]    file_sizes:   0%|                           | 24.6k/13.7M [00:00<02:07, 107kB/s]    file_sizes:   0%|                           | 49.2k/13.7M [00:00<02:07, 107kB/s]    file_sizes:   1%|2                           | 106k/13.7M [00:00<01:19, 172kB/s]    file_sizes:   2%|4                           | 221k/13.7M [00:00<00:44, 301kB/s]    file_sizes:   3%|9                           | 451k/13.7M [00:01<00:24, 551kB/s]    file_sizes:   7%|#7                         | 909k/13.7M [00:01<00:12, 1.04MB/s]    file_sizes:  13%|###4                      | 1.83M/13.7M [00:01<00:06, 1.97MB/s]    file_sizes:  15%|###9                      | 2.09M/13.7M [00:01<00:06, 1.74MB/s]    file_sizes:  30%|#######6                  | 4.06M/13.7M [00:02<00:02, 3.81MB/s]    file_sizes:  33%|########6                 | 4.58M/13.7M [00:02<00:03, 2.57MB/s]    file_sizes:  47%|############1             | 6.41M/13.7M [00:02<00:01, 3.92MB/s]    file_sizes:  51%|#############1            | 6.94M/13.7M [00:03<00:02, 2.76MB/s]    file_sizes:  64%|################6         | 8.77M/13.7M [00:03<00:01, 3.21MB/s]    file_sizes:  68%|#################6        | 9.30M/13.7M [00:03<00:01, 3.01MB/s]    file_sizes:  71%|##################3       | 9.69M/13.7M [00:04<00:01, 2.21MB/s]    file_sizes:  76%|###################8      | 10.5M/13.7M [00:05<00:01, 1.73MB/s]    file_sizes:  78%|####################3     | 10.7M/13.7M [00:05<00:02, 1.39MB/s]    file_sizes:  80%|####################7     | 10.9M/13.7M [00:05<00:02, 1.29MB/s]    file_sizes:  81%|#####################     | 11.1M/13.7M [00:06<00:02, 1.01MB/s]    file_sizes:  83%|######################3    | 11.4M/13.7M [00:06<00:02, 840kB/s]    file_sizes:  84%|######################7    | 11.6M/13.7M [00:06<00:02, 842kB/s]    file_sizes:  86%|#######################1   | 11.8M/13.7M [00:07<00:02, 843kB/s]    file_sizes:  86%|#######################3   | 11.9M/13.7M [00:07<00:02, 748kB/s]    file_sizes:  87%|#######################5   | 12.0M/13.7M [00:07<00:02, 703kB/s]    file_sizes:  88%|#######################7   | 12.1M/13.7M [00:07<00:02, 633kB/s]    file_sizes:  89%|########################   | 12.2M/13.7M [00:08<00:02, 652kB/s]    file_sizes:  90%|########################2  | 12.3M/13.7M [00:08<00:02, 590kB/s]    file_sizes:  91%|########################5  | 12.5M/13.7M [00:08<00:02, 485kB/s]    file_sizes:  93%|#########################  | 12.7M/13.7M [00:08<00:01, 608kB/s]    file_sizes:  93%|#########################2 | 12.8M/13.7M [00:09<00:01, 562kB/s]    file_sizes:  94%|#########################3 | 12.9M/13.7M [00:09<00:02, 386kB/s]    file_sizes:  96%|#########################8 | 13.1M/13.7M [00:09<00:01, 525kB/s]    file_sizes:  96%|#########################9 | 13.2M/13.7M [00:10<00:01, 466kB/s]    file_sizes:  97%|##########################1| 13.3M/13.7M [00:10<00:01, 436kB/s]    file_sizes:  97%|##########################2| 13.3M/13.7M [00:10<00:00, 395kB/s]    file_sizes:  98%|##########################3| 13.4M/13.7M [00:10<00:00, 346kB/s]    file_sizes:  98%|##########################4| 13.4M/13.7M [00:11<00:00, 308kB/s]    file_sizes:  99%|##########################6| 13.5M/13.7M [00:11<00:00, 341kB/s]    file_sizes:  99%|##########################7| 13.6M/13.7M [00:11<00:00, 304kB/s]    file_sizes:  99%|##########################7| 13.6M/13.7M [00:11<00:00, 257kB/s]    file_sizes: 100%|###########################| 13.7M/13.7M [00:11<00:00, 318kB/s]    file_sizes: 100%|##########################| 13.7M/13.7M [00:11<00:00, 1.15MB/s]
+    file_sizes:   0%|                                   | 0.00/13.7M [00:00<?, ?B/s]    file_sizes:   0%|                           | 24.6k/13.7M [00:00<01:57, 117kB/s]    file_sizes:   0%|                           | 49.2k/13.7M [00:00<01:57, 116kB/s]    file_sizes:   1%|2                           | 106k/13.7M [00:00<01:13, 185kB/s]    file_sizes:   2%|4                           | 221k/13.7M [00:00<00:41, 325kB/s]    file_sizes:   3%|9                           | 451k/13.7M [00:01<00:22, 594kB/s]    file_sizes:   5%|#3                          | 647k/13.7M [00:01<00:18, 708kB/s]    file_sizes:  12%|###                       | 1.63M/13.7M [00:01<00:06, 1.97MB/s]    file_sizes:  18%|####5                     | 2.42M/13.7M [00:01<00:04, 2.53MB/s]    file_sizes:  31%|########                  | 4.25M/13.7M [00:01<00:02, 4.41MB/s]    file_sizes:  42%|###########               | 5.82M/13.7M [00:02<00:01, 5.32MB/s]    file_sizes:  54%|##############            | 7.40M/13.7M [00:02<00:01, 5.95MB/s]    file_sizes:  65%|################9         | 8.97M/13.7M [00:02<00:00, 6.38MB/s]    file_sizes:  77%|###################9      | 10.5M/13.7M [00:02<00:00, 6.68MB/s]    file_sizes:  83%|#####################4    | 11.3M/13.7M [00:02<00:00, 5.76MB/s]    file_sizes:  94%|########################4 | 12.9M/13.7M [00:03<00:00, 6.21MB/s]    file_sizes: 100%|#########################9| 13.7M/13.7M [00:03<00:00, 5.46MB/s]    file_sizes: 100%|##########################| 13.7M/13.7M [00:03<00:00, 4.01MB/s]
     Successfully downloaded file to /home/circleci/celer_data/libsvm/binary/rcv1_train.binary.bz2
     Decompressing...
     Loading svmlight file...
@@ -175,11 +175,11 @@ Now do the timings a posteriori, as if we knew the optimal iteration/lambda
 
  .. code-block:: none
 
-    Duration for CP: 0.196s
+    Duration for CP: 0.750s
     CP early stop needs 120 iter
     LassoCV optimal lambda: 4.33e-03 lambda_max
-    CP time: 0.196 s
-    CV time: 7.313 s
+    CP time: 0.750 s
+    CV time: 13.098 s
     CP support size: 712
     CV support size: 1474
 
@@ -189,7 +189,7 @@ Now do the timings a posteriori, as if we knew the optimal iteration/lambda
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  52.368 seconds)
+   **Total running time of the script:** ( 1 minutes  22.567 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_cv_vs_cp_path.py:

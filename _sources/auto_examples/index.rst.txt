@@ -17,27 +17,6 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Plot the stopping time for low rank matrix completion.">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_stopping_lowrank_thumb.png
-     :alt: Plot stopping time for low rank matrix completion
-
-     :ref:`sphx_glr_auto_examples_plot_stopping_lowrank.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_stopping_lowrank
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="From the data, a good dual stepsize can be estimated in the case of sparse recovery.">
 
 .. only:: html
@@ -77,6 +56,27 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_rate_bregman
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Plot the stopping time for low rank matrix completion.">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_stopping_lowrank_thumb.png
+     :alt: Plot stopping time for low rank matrix completion
+
+     :ref:`sphx_glr_auto_examples_plot_stopping_lowrank.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_stopping_lowrank
 
 .. raw:: html
 

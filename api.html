@@ -24,9 +24,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -128,8 +128,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/iterreg.sparse.solvers.dual_primal.html#iterreg.sparse.solvers.dual_primal" title="iterreg.sparse.solvers.dual_primal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse.solvers.dual_primal</span></code></a>(X, y[, max_iter, …])</p></td>
-<td><p>Chambolle-Pock algorithm applied to the dual: interpolation on the primal update. Parameters ———- X : np.array, shape (n_samples, n_features)     Design matrix. y : np.array, shape (n_samples,)     Observation vector. max_iter : int, optional (default=1000)     Maximum number of Chambolle-Pock iterations. f_store : int, optional (default=10)     Primal iterates <cite>w</cite> are stored every <cite>f_store</cite> iterations. prox : callable, optional (default=shrink)     Proximal operator of the minimized regularizer. By default, a shrink     is used, corresponding to the convex L1 regularizer. It is given <cite>(w, tau)</cite> as input (the primal iterate and the primal     stepsize). ret_all : bool, optional (default=True)     If True, return all stored primal iterates. callback : callable or None, optional (default=None)     Callable called on primal iterate <cite>w</cite> every <cite>f_store</cite> iterations. memory : int, optional (default=10)     If <cite>callback</cite> is not None and its value did not decrease for the last     <cite>memory</cite> stored iterates, the algorithm is early stopped. step_ratio : float, optional (default=1)     Ratio betwen primal and dual stepsizes (tau/sigma). If <cite>step_ratio=1</cite>, both stepsizes are equal. rho : float, optional (default=0.99)     The product of the step sizes is equal to <cite>rho / norm(X, ord=2)**2</cite> verbose : bool, optional (default=False)     Verbosity of the algorithm. Returns ——- w : np.array, shape (n_features,)     Last or best primal iterate. theta : np.array, shape (n_samples,)     Last or best dual iterate. crits : np.array, shape (max_iter // f_store,)     Value of callback along iterations. all_w : np.array, shape (max_iter // f_store, n_features)     Primal iterates every <cite>f_store</cite> iterations. Returned only if     <cite>ret_all</cite> is True.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/iterreg.sparse.solvers.dual_primal.html#iterreg.sparse.solvers.dual_primal" title="iterreg.sparse.solvers.dual_primal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse.solvers.dual_primal</span></code></a>(X, y[, max_iter, ...])</p></td>
+<td><p>Chambolle-Pock algorithm applied to the dual: interpolation on the primal update. Parameters ---------- X : np.array, shape (n_samples, n_features)     Design matrix. y : np.array, shape (n_samples,)     Observation vector. max_iter : int, optional (default=1000)     Maximum number of Chambolle-Pock iterations. f_store : int, optional (default=10)     Primal iterates <cite>w</cite> are stored every <cite>f_store</cite> iterations. prox : callable, optional (default=shrink)     Proximal operator of the minimized regularizer. By default, a shrink     is used, corresponding to the convex L1 regularizer. It is given <cite>(w, tau)</cite> as input (the primal iterate and the primal     stepsize). ret_all : bool, optional (default=True)     If True, return all stored primal iterates. callback : callable or None, optional (default=None)     Callable called on primal iterate <cite>w</cite> every <cite>f_store</cite> iterations. memory : int, optional (default=10)     If <cite>callback</cite> is not None and its value did not decrease for the last     <cite>memory</cite> stored iterates, the algorithm is early stopped. step_ratio : float, optional (default=1)     Ratio betwen primal and dual stepsizes (tau/sigma). If <cite>step_ratio=1</cite>, both stepsizes are equal. rho : float, optional (default=0.99)     The product of the step sizes is equal to <cite>rho / norm(X, ord=2)**2</cite> verbose : bool, optional (default=False)     Verbosity of the algorithm. Returns ------- w : np.array, shape (n_features,)     Last or best primal iterate. theta : np.array, shape (n_samples,)     Last or best dual iterate. crits : np.array, shape (max_iter // f_store,)     Value of callback along iterations. all_w : np.array, shape (max_iter // f_store, n_features)     Primal iterates every <cite>f_store</cite> iterations. Returned only if     <cite>ret_all</cite> is True.</p></td>
 </tr>
 </tbody>
 </table>
@@ -140,7 +140,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/iterreg.sparse.estimators.SparseIterReg.html#iterreg.sparse.estimators.SparseIterReg" title="iterreg.sparse.estimators.SparseIterReg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse.estimators.SparseIterReg</span></code></a>([…])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/iterreg.sparse.estimators.SparseIterReg.html#iterreg.sparse.estimators.SparseIterReg" title="iterreg.sparse.estimators.SparseIterReg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse.estimators.SparseIterReg</span></code></a>([...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -161,7 +161,7 @@
     </p>
     <p>
         &copy; Copyright 2020, Mathurin Massias.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.<br/>
     </p>
   </div>
 </footer>
