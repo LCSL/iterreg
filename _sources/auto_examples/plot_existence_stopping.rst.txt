@@ -28,9 +28,10 @@ This is for L1 regression.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_existence_stopping_001.png
-    :alt: plot existence stopping
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_existence_stopping_001.png
+   :alt: plot existence stopping
+   :srcset: /auto_examples/images/sphx_glr_plot_existence_stopping_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
@@ -40,6 +41,20 @@ This is for L1 regression.
  .. code-block:: none
 
     usetex mode requires TeX.
+    /home/circleci/.local/lib/python3.8/site-packages/sklearn/linear_model/_base.py:133: FutureWarning: The default of 'normalize' will be set to False in version 1.2 and deprecated in version 1.4.
+    If you wish to scale the data, use Pipeline with a StandardScaler in a preprocessing stage. To reproduce the previous behavior:
+
+    from sklearn.pipeline import make_pipeline
+
+    model = make_pipeline(StandardScaler(with_mean=False), LassoLars())
+
+    If you wish to pass a sample_weight parameter, you need to pass it as a fit parameter to each step of the pipeline as follows:
+
+    kwargs = {s[0] + '__sample_weight': sample_weight for s in model.steps}
+    model.fit(X, y, **kwargs)
+
+    Set parameter alpha to: original_alpha * np.sqrt(n_samples). 
+      warnings.warn(
     0.1
     1.7000000000000002
     3.3000000000000003
@@ -135,7 +150,7 @@ This is for L1 regression.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  56.677 seconds)
+   **Total running time of the script:** ( 0 minutes  18.089 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_existence_stopping.py:

@@ -158,15 +158,17 @@ When there is noise in the data:
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_sparse_recovery_001.png
-          :alt: Iterative regularization, Lasso path
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_sparse_recovery_001.png
+         :alt: Iterative regularization, Lasso path
+         :srcset: /auto_examples/images/sphx_glr_plot_sparse_recovery_001.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_sparse_recovery_002.png
-          :alt: Iterative regularization, Lasso path
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_sparse_recovery_002.png
+         :alt: Iterative regularization, Lasso path
+         :srcset: /auto_examples/images/sphx_glr_plot_sparse_recovery_002.png
+         :class: sphx-glr-multi-img
 
 
 .. rst-class:: sphx-glr-script-out
@@ -184,7 +186,7 @@ When there is noise in the data:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  32.785 seconds)
+   **Total running time of the script:** ( 0 minutes  20.689 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_sparse_recovery.py:

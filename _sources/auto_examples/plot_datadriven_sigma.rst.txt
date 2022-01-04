@@ -123,9 +123,10 @@ The number of non zero coefficients in this vector is the number of indices
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_datadriven_sigma_001.png
-    :alt: plot datadriven sigma
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_datadriven_sigma_001.png
+   :alt: plot datadriven sigma
+   :srcset: /auto_examples/images/sphx_glr_plot_datadriven_sigma_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -134,7 +135,7 @@ The number of non zero coefficients in this vector is the number of indices
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.100 seconds)
+   **Total running time of the script:** ( 0 minutes  2.445 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_datadriven_sigma.py:
