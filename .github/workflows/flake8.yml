@@ -3,12 +3,12 @@ name: linter
 on:
   create:
     branches:
-      - 'master'
+      - 'main'
     tags:
       - '**'
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   lint:
