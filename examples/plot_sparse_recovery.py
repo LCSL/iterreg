@@ -31,7 +31,7 @@ def plot_varying_sigma(corr, density, snr, max_iter=100):
     supp = np.random.choice(n_features, size=int(density * n_features),
                             replace=False)
     w_true = np.zeros(n_features)
-    w_true[supp] = 1
+    w_true[supp] = np.random.uniform(low=0.5, high=1.5, size=len(supp))
     X_, y_, w_true = make_correlated_data(
         n_samples=int(n_samples * 4 / 3.), n_features=n_features,
         w_true=w_true,
