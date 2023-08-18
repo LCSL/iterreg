@@ -16,7 +16,7 @@ from iterreg.low_rank.solvers import dual_primal_low_rank
 configure_plt()
 
 
-d = 100
+d = 200
 np.random.seed(0)
 mask = np.zeros([d, d], dtype=bool)
 idx = np.random.choice(d ** 2, d ** 2 // 5, replace=False)
@@ -55,7 +55,7 @@ for delta in deltas:
     distances[delta] = dist
 
 plt.close('all')
-fig1, ax = plt.subplots(1, 1, constrained_layout=True, figsize=(3.8, 2.2))
+fig1, ax = plt.subplots(1, 1, constrained_layout=True, figsize=(8., 4))
 n_points = 100
 for delta in deltas:
     x_plt = f_store * np.arange(len(distances[delta]))
